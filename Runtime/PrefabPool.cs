@@ -77,13 +77,22 @@ public class PrefabPool
         return (_available.Count > 0);
     }
 
-    public IPrefabPoolable FetchAvailable()
+    public GameObject FetchAvailable()
     {
         var entry = _available.Dequeue();
         var poolable = entry.GetComponent<IPrefabPoolable>();
         poolable.Aquire();
-        return poolable;
+        return entry;
     }
+
+    public GameObject FetchAvailable(out IPrefabPoolable poolable)
+    {
+        var entry = _available.Dequeue();
+        poolable = entry.GetComponent<IPrefabPoolable>();
+        poolable.Aquire();
+        return entry;
+    }
+
 
     public void ReleaseAll()
     {

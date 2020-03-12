@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using BrightLib.RPGDatabase.Runtime;
 
 namespace BrightLib.BrightPoolSystem.Demo
 {
     public class DemoPoolSystem : MonoBehaviour
     {
-
         public PrefabPoolConfig[] configs;
 
         private PoolSystem _poolSystem;
@@ -13,17 +11,13 @@ namespace BrightLib.BrightPoolSystem.Demo
         void Start()
         {
             _poolSystem = new PoolSystem();
-            foreach(var config in configs)
+            foreach (var config in configs)
             {
                 _poolSystem.CreatePool(config.prefab.name, config.prefab, config.size);
             }
-        }
-    }
 
-    [System.Serializable]
-    public class PrefabPoolConfig
-    {
-        public GameObject prefab;
-        public int size = 10;
+            var obj = _poolSystem.FetchAvailable(configs[0].prefab.name);
+            Debug.Log($"Fetched object. His name is {obj.name}");
+        }
     }
 }

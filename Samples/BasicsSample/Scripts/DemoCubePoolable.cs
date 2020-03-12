@@ -17,11 +17,13 @@ public class DemoCubePoolable : MonoBehaviour, IPrefabPoolable
 
     public void Aquire()
     {
+        gameObject.SetActive(true);
         //soft init
     }
 
     public void Release()
     {
+        gameObject.SetActive(false);
         onRelease?.Invoke(gameObject);
     }
 }
