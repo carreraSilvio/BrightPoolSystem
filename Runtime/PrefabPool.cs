@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PrefabPool
 {
-    private List<GameObject> _entries;
+    private GameObject[] _entries;
     private Queue<GameObject> _available;
 
     private static GameObject _mainRoot;
@@ -11,7 +11,14 @@ public class PrefabPool
 
     public PrefabPool(GameObject prefab, int size = 10)
     {
-        _entries = new List<GameObject>(size);
+        var poolable = prefab.GetComponentInChildren<IPrefabPoolable>(true);
+        if (poolable == null)
+        {
+            Debug.LogWarning("No IPrefabPoolable found. Make sure your prefab has one script that implements IPrefabPoolable");
+            return;
+        }
+
+        _entries = new GameObject[size];
         _available = new Queue<GameObject>(size);
 
         FindMainRoot();
@@ -24,7 +31,7 @@ public class PrefabPool
         if (_mainRoot != null) return;
 
         var mainRoot = GameObject.Find("PoolSystem");
-        if(mainRoot == null)
+        if (mainRoot == null)
         {
             mainRoot = new GameObject("PoolSystem");
             mainRoot.transform.SetAsLastSibling();
@@ -37,7 +44,7 @@ public class PrefabPool
         if (_localRoot != null) return;
 
         _localRoot = GameObject.Find(prefab.name + "Pool");
-        if(_localRoot == null)
+        if (_localRoot == null)
         {
             _localRoot = new GameObject(prefab.name + "Pool");
         }
@@ -46,21 +53,17 @@ public class PrefabPool
 
     private void Create(GameObject prefab, int amount = 10)
     {
+        int index = 0;
         while (amount > 0)
         {
             var go = GameObject.Instantiate(prefab);
             go.transform.SetParent(_localRoot.transform);
-            go.name = prefab.name + _entries.Count;
+            go.name = prefab.name + index;
             go.SetActive(false);
 
             var poolable = go.GetComponentInChildren<IPrefabPoolable>(true);
-            if(poolable == null)
-            {
-                Debug.LogWarning("No IPrefabPoolable found. Make sure your prefab has one script that implements IPrefabPoolable");
-                return;
-            }
             poolable.onRelease += HandleEntryRelease;
-            _entries.Add(go);
+            _entries[index++] = go;
             _available.Enqueue(go);
 
             amount--;
@@ -85,10 +88,10 @@ public class PrefabPool
         return entry;
     }
 
-    public GameObject FetchAvailable(out IPrefabPoolable poolable)
+    public GameObject FetchAvailable<T>(out T poolable) where T : IPrefabPoolable
     {
         var entry = _available.Dequeue();
-        poolable = entry.GetComponent<IPrefabPoolable>();
+        poolable = (T)entry.GetComponent<IPrefabPoolable>();
         poolable.Aquire();
         return entry;
     }
@@ -102,4 +105,7 @@ public class PrefabPool
             poolable.Release();
         }
     }
+
+    public GameObject[] Entries { get => _entries; }
+    public int TotalInUse { get => _entries.Length - _available.Count; }
 }
