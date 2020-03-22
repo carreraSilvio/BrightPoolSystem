@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Creates the pools definide by the config array
-/// </summary>
-public class PoolSystemInitializer : MonoBehaviour
-{
-    [SerializeField]
-    private PrefabPoolConfig[] _configs = default;
-    
-    void Awake()
+namespace BrightLib.Pooling.Runtime
+{ 
+    /// <summary>
+    /// Creates the pools definide by the config array
+    /// </summary>
+    public class PoolSystemInitializer : MonoBehaviour
     {
-        foreach (var config in _configs)
+        [SerializeField]
+        private PrefabPoolConfig[] _configs = default;
+
+        void Awake()
         {
-            PoolSystem.CreatePool(config.prefab.name, config.prefab, config.size);
+            foreach (var config in _configs)
+            {
+                PoolSystem.CreatePool(config.prefab.name, config.prefab, config.size);
+            }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
     }
 }
