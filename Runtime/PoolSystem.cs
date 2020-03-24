@@ -9,7 +9,7 @@ namespace BrightLib.Pooling.Runtime
     /// </summary>
     public class PoolSystem
     {
-        private Dictionary<string, PrefabPool> _pools;
+        private Dictionary<string, Pool> _pools;
 
         private static PoolSystem _instance;
 
@@ -28,9 +28,12 @@ namespace BrightLib.Pooling.Runtime
 
         private PoolSystem()
         {
-            _pools = new Dictionary<string, PrefabPool>();
+            _pools = new Dictionary<string, Pool>();
         }
 
+        /// <summary>
+        /// Create a new pool and add it to list
+        /// </summary>
         public static void CreatePool(string id, GameObject prefab, int size = 10)
         {
             Instance.ExecuteCreatePool(id, prefab, size);
@@ -42,6 +45,17 @@ namespace BrightLib.Pooling.Runtime
         public static GameObject[] Peek(Enum enumId)
         {
             return Instance.ExecutePeek(enumId.ToString());
+        }
+
+        /// <summary>
+        /// Searches for an available object and if it finds one, aquires it and returns.
+        /// </summary>
+        public static bool TryFetchAvailable(string id, out GameObject gameObject)
+        {
+            var result = HasAvailable(id);
+            gameObject = result ? FetchAvailable(id) : default;
+
+            return result;
         }
 
         /// <summary>
@@ -63,17 +77,17 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Searches for an available object and if it finds one, aquires it and returns.
         /// </summary>
-        public static GameObject FetchAvailable<T>(Enum enumId, out T poolable) where T : IPrefabPoolable
+        public static GameObject FetchAvailable<T>(Enum enumId, out T component) where T : MonoBehaviour
         {
-            return FetchAvailable(enumId.ToString(), out poolable);
+            return FetchAvailable(enumId.ToString(), out component);
         }
 
         /// <summary>
         /// Searches for an available object and if it finds one, aquires it and returns.
         /// </summary>
-        public static GameObject FetchAvailable<T>(string id, out T poolable) where T : IPrefabPoolable
+        public static GameObject FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
         {
-            return Instance.ExecuteFetchAvailable(id, out poolable);
+            return Instance.ExecuteFetchAvailable(id, out component);
         }
 
         /// <summary>
@@ -121,7 +135,7 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Returns the total of objects in the given pool that are "in use"
         /// </summary>
-        public static int TotalInUse(Enum enumId)
+        public static int InUseTotal(Enum enumId)
         {
             return TotalInUse(enumId.ToString());
         }
@@ -135,10 +149,8 @@ namespace BrightLib.Pooling.Runtime
             if (!Instance._pools.ContainsKey(id)) return 0;
 
             var pool = Instance._pools[id];
-            return pool.TotalInUse;
+            return pool.InUseTotal;
         }
-
-        #region Private Methods
 
         public GameObject[] ExecutePeek(string id)
         {
@@ -146,9 +158,11 @@ namespace BrightLib.Pooling.Runtime
             return entries;
         }
 
+        #region Private Methods
+
         private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
         {
-            var pool = new PrefabPool(prefab, size);
+            var pool = new Pool(prefab, size);
             _pools.Add(id, pool);
         }
 
@@ -160,16 +174,16 @@ namespace BrightLib.Pooling.Runtime
             return pool.FetchAvailable();
         }
 
-        private GameObject ExecuteFetchAvailable<T>(string id, out T poolable) where T : IPrefabPoolable
+        private GameObject ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
         {
             if (!_pools.ContainsKey(id))
             {
-                poolable = default;
+                component = default;
                 return null;
             }
 
             var pool = _pools[id];
-            return pool.FetchAvailable(out poolable);
+            return pool.FetchAvailable(out component);
         }
 
         private bool ExecuteHasAvailable(string id)
@@ -178,6 +192,7 @@ namespace BrightLib.Pooling.Runtime
 
             return _pools[id].HasAvailable();
         }
+
         #endregion
     }
 }

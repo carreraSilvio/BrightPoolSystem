@@ -3,20 +3,24 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
-    public class PrefabPool
+
+    public class Pool
     {
+        public PoolEvent onPoolableAquire;
+        public PoolEvent onPoolableRelease;
+
         private GameObject[] _entries;
         private Queue<GameObject> _available;
 
         private static GameObject _mainRoot;
         private GameObject _localRoot;
 
-        public PrefabPool(GameObject prefab, int size = 10)
+        public Pool(GameObject prefab, int size = 10)
         {
-            var poolable = prefab.GetComponentInChildren<IPrefabPoolable>(true);
+            var poolable = prefab.GetComponentInChildren<IPoolable>(true);
             if (poolable == null)
             {
-                Debug.LogWarning("No IPrefabPoolable found. Make sure your prefab has one script that implements IPrefabPoolable");
+                Debug.LogWarning($"No {nameof(IPoolable)} found in {prefab.name} prefab. Make sure one script implements it.");
                 return;
             }
 
@@ -63,8 +67,8 @@ namespace BrightLib.Pooling.Runtime
                 go.name = prefab.name + index;
                 go.SetActive(false);
 
-                var poolable = go.GetComponentInChildren<IPrefabPoolable>(true);
-                poolable.onRelease += HandleEntryRelease;
+                var poolable = go.GetComponentInChildren<IPoolable>(true);
+                poolable.onRelease += HandlePoolableRelease;
                 _entries[index++] = go;
                 _available.Enqueue(go);
 
@@ -72,7 +76,7 @@ namespace BrightLib.Pooling.Runtime
             }
         }
 
-        private void HandleEntryRelease(GameObject go)
+        private void HandlePoolableRelease(GameObject go)
         {
             _available.Enqueue(go);
         }
@@ -85,30 +89,30 @@ namespace BrightLib.Pooling.Runtime
         public GameObject FetchAvailable()
         {
             var entry = _available.Dequeue();
-            var poolable = entry.GetComponent<IPrefabPoolable>();
+            var poolable = entry.GetComponent<IPoolable>();
             poolable.Aquire();
             return entry;
         }
 
-        public GameObject FetchAvailable<T>(out T poolable) where T : IPrefabPoolable
+        public GameObject FetchAvailable<T>(out T component) where T : MonoBehaviour 
         {
             var entry = _available.Dequeue();
-            poolable = (T)entry.GetComponent<IPrefabPoolable>();
+            var poolable = entry.GetComponent<IPoolable>();
             poolable.Aquire();
+            component = entry.GetComponent<T>();
             return entry;
         }
-
 
         public void ReleaseAll()
         {
             foreach (var entry in _entries)
             {
-                var poolable = entry.GetComponent<IPrefabPoolable>();
+                var poolable = entry.GetComponent<IPoolable>();
                 poolable.Release();
             }
         }
 
         public GameObject[] Entries { get => _entries; }
-        public int TotalInUse { get => _entries.Length - _available.Count; }
+        public int InUseTotal { get => _entries.Length - _available.Count; }
     }
 }

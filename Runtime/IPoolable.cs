@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
-    public interface IPrefabPoolable
+    public interface IPoolable
     {
         /// <summary>
-        /// Fired by the object once it has finished it's use and it becames available for the pool
+        /// Fired by the object once it has finished it's use and it becomes available for the pool
         /// </summary>
         event Action<GameObject> onRelease;
 

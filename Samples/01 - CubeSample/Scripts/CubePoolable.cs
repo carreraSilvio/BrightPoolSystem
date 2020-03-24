@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Samples.CubeSample
 {
-    public class CubePoolable : MonoBehaviour, IPrefabPoolable
+    public class CubePoolable : MonoBehaviour, IPoolable
     {
         public event Action<GameObject> onRelease;
 
