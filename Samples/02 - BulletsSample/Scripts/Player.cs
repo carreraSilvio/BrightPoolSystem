@@ -6,10 +6,14 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 	{
 		public float speed = 5f;
 		private CharacterController _characterController;
+		private Weapon _weapon;
+
+		public Weapon Weapon { get => _weapon; }
 
 		public void Awake()
 		{
 			_characterController = GetComponentInParent<CharacterController>();
+			_weapon = GetComponentInChildren<Weapon>();
 		}
 
 		public void Move(Vector3 desiredMoveDirection)

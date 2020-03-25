@@ -61,6 +61,18 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Searches for an available object and if it finds one, aquires it and returns.
         /// </summary>
+        public static bool TryFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
+        {
+            component = default;
+            var result = HasAvailable(id);
+            if(result) FetchAvailable(id, out component);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Searches for an available object and if it finds one, aquires it and returns.
+        /// </summary>
         public static GameObject FetchAvailable(Enum enumId)
         {
             return FetchAvailable(enumId.ToString());

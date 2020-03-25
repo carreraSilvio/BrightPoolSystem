@@ -1,44 +1,120 @@
 ﻿using BrightLib.Pooling.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BrightLib.Pooling.Samples.BulletsSample
 {
     public class Weapon : MonoBehaviour
     {
+        public Transform emissionSpot;
         public float fireRate = 0.1f;
-        public int clipSize = 30;
+        public int clipSize = 12;
+        public float reloadSpeed = 0.1f;
+        public int range = 30;
+        public float shootForce = 500f;
 
-        private float lastTimeShot;
+        private float _lastTimeShot;
+        private int _bulletsInClip;
 
-        // Start is called before the first frame update
-        void Start()
+        private float _reloadStartTime;
+
+        public enum WeaponState { Idle, Shooting, Reloading};
+        private WeaponState _state;
+
+       
+        void Awake()
         {
-
+            _bulletsInClip = clipSize;
         }
 
-        // Update is called once per frame
-        public void Shoot()
+        private void Update()
         {
-            if(PoolSystem.TryFetchAvailable("Bullet", out GameObject bullet))
+            if(_state == WeaponState.Reloading)
             {
-                bullet.transform.position = transform.position;
-                lastTimeShot = Time.time;
+                if(IsReloadComplete)
+                {
+                    _bulletsInClip = clipSize;
+                    _state = WeaponState.Idle;
+                }
+            }
+            else if (_state == WeaponState.Shooting)
+            {
+                if (IsShootingComplete)
+                {
+                    _state = WeaponState.Idle;
+                }
+            }
+        }
+
+        public void Reload()
+        {
+            if (IsClipFull || _state == WeaponState.Reloading) return;
+            
+            _reloadStartTime = Time.time;
+            _state = WeaponState.Reloading;
+        }
+
+        public void PullTrigger()
+        {
+            if(_bulletsInClip == 0)
+            {
+                Debug.Log("Bullet clip empty. Reload!");
+            }
+            else
+            {
+                if(IsShootingComplete) Shoot();
+            }
+        }
+
+        private void Shoot()
+        {
+            if (PoolSystem.TryFetchAvailable("Bullet", out Bullet bullet))
+            {
+                bullet.transform.position = emissionSpot.position;
+                bullet.Fire(emissionSpot.forward * shootForce, range);
+
+                _lastTimeShot = Time.time;
+                _bulletsInClip--;
+                _state = WeaponState.Shooting; 
             }
             else
             {
                 Debug.Log("no more bullets available in pool");
             }
-            
         }
 
-        public bool CanShoot
+        public bool IsShootingComplete
         {
             get
             {
-                return Time.time - lastTimeShot >= fireRate;
+                return Time.time - _lastTimeShot >= fireRate;
             }
         }
+
+        public bool IsClipEmpty
+        {
+            get
+            {
+                return _bulletsInClip == 0;
+            }
+        }
+
+        public bool IsClipFull
+        {
+            get
+            {
+                return _bulletsInClip == clipSize;
+            }
+        }
+
+        public bool IsReloadComplete
+        {
+            get
+            {
+                return Time.time - _reloadStartTime > reloadSpeed;
+            }
+        }
+
+        public int BulletsInClip { get => _bulletsInClip; }
+        public string State { get => _state.ToString(); }
     }
 }

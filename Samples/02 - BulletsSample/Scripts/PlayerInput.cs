@@ -4,7 +4,6 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 {
 	public class PlayerInput : MonoBehaviour
 	{
-
 		public Player player;
 		public CameraRig _cameraRig;
 
@@ -12,6 +11,14 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 		public void Update()
 		{
 			UpdateMovement();
+			if (Input.GetButtonDown("Fire1"))
+			{
+				player.Weapon.PullTrigger();
+			}
+			else if(Input.GetKeyDown(KeyCode.R))
+			{
+				player.Weapon.Reload();
+			}
 		}
 
 		public void LateUpdate()

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraRig : MonoBehaviour 
 {
@@ -13,6 +11,7 @@ public class CameraRig : MonoBehaviour
 	public bool clampVerticalRotation;
 	public float minX = -0.5f;
 	public float maxX = 0.35f;
+	public Vector3 positionOffset;
 
 	void Start()
 	{
@@ -42,7 +41,7 @@ public class CameraRig : MonoBehaviour
 	private Vector3 _smoothedPosition;
 	public void Follow()
 	{
-		_desiredPosition = _character.position;
+		_desiredPosition = _character.position + positionOffset;
 		_smoothedPosition = Vector3.Lerp(transform.position, _desiredPosition, moveSpeed);
 		transform.position = _smoothedPosition;
 		transform.localRotation = _character.localRotation;

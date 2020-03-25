@@ -17,5 +17,10 @@ namespace BrightLib.Pooling.Runtime
             gameObject.SetActive(false);
             onRelease?.Invoke(gameObject);
         }
+
+        public virtual void OnDisable()
+        {
+            Release();
+        }
     }
 }
