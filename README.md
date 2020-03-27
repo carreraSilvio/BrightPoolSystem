@@ -1,6 +1,10 @@
 # Bright Pool System
 Creates and manages access to your pools. 
 
+![Photo](https://flic.kr/p/2iJfn6a)
+
+
+
 ## Features
 * Create pools when it's best for your project.
 * Avoid garbage collection kicking in by resuing objects.
