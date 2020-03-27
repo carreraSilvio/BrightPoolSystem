@@ -1,0 +1,15 @@
+{
+    "name": "BrightLib.PoolSystem.Samples.BulletsSample",
+    "references": [
+        "GUID:03981fe1f594eb7408d0462f0494881f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
