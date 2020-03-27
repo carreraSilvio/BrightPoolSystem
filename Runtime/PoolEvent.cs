@@ -1,9 +1,11 @@
-﻿using UnityEngine.Events;
-
-namespace BrightLib.Pooling.Runtime
+﻿namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
-    /// Pool event with arguments: (int) Pool Size, (int) Total In Use
+    /// Use it with <see cref="PoolSystem.AddListener(string, PoolEvent, PoolAction)"/>
     /// </summary>
-    public class PoolEvent : UnityEvent<int, int> { };
+    public enum PoolEvent
+    {
+        OnAquire,
+        OnRelease
+    }
 }

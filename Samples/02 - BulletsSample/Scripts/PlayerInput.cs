@@ -5,8 +5,7 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 	public class PlayerInput : MonoBehaviour
 	{
 		public Player player;
-		public CameraRig _cameraRig;
-
+		public CameraRig cameraRig;
 
 		public void Update()
 		{
@@ -32,28 +31,26 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 			var horizontalAxis = Input.GetAxis("Horizontal");
 			var verticalAxis = Input.GetAxis("Vertical");
 
-			var forward = _cameraRig.cameraAttached.transform.forward;
-			var right = _cameraRig.cameraAttached.transform.right;
+			var forward = cameraRig.cameraAttached.transform.forward;
+			var right = cameraRig.cameraAttached.transform.right;
 
 			var desiredMoveDirection = forward.normalized * verticalAxis + right.normalized * horizontalAxis;
 			desiredMoveDirection.y = 0;
-
+		
 			player.Move(desiredMoveDirection);
 		}
 
 		private void UpdateRigMovement()
 		{
-			_cameraRig.Follow();
+			cameraRig.Follow();
 		}
 
 		private void UpdateCameraRotation()
 		{
 			var vertical = Input.GetAxis("Mouse X");
 			var horizontal = Input.GetAxis("Mouse Y");
-			_cameraRig.RotateCamera(vertical, horizontal);
+
+			cameraRig.RotateCamera(vertical, horizontal);
 		}
-
-
-
 	}
 }

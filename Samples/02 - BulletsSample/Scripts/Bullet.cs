@@ -34,7 +34,6 @@ namespace BrightLib.Pooling.Samples.BulletsSample
             {
                 if(Vector3.Distance(_positionFired, transform.position) >= _range)
                 {
-                    Debug.Log("range reached");
                     gameObject.SetActive(false);
                 }
             }

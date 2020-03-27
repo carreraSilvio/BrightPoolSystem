@@ -8,7 +8,7 @@ namespace BrightLib.Pooling.Runtime
     public class PoolSystemInitializer : MonoBehaviour
     {
         [SerializeField]
-        private PrefabPoolConfig[] _configs = default;
+        private PoolConfig[] _configs = default;
 
         void Awake()
         {

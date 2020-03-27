@@ -6,8 +6,8 @@ namespace BrightLib.Pooling.Runtime
 
     public class Pool
     {
-        public PoolEvent onPoolableAquire;
-        public PoolEvent onPoolableRelease;
+        public PoolAction onPoolableAquire;
+        public PoolAction onPoolableRelease;
 
         private GameObject[] _entries;
         private Queue<GameObject> _available;
@@ -15,7 +15,9 @@ namespace BrightLib.Pooling.Runtime
         private static GameObject _mainRoot;
         private GameObject _localRoot;
 
-        public Pool(GameObject prefab, int size = 10)
+        private string _id;
+
+        public Pool(GameObject prefab, int size, PoolTracker tracker)
         {
             var poolable = prefab.GetComponentInChildren<IPoolable>(true);
             if (poolable == null)
@@ -27,34 +29,10 @@ namespace BrightLib.Pooling.Runtime
             _entries = new GameObject[size];
             _available = new Queue<GameObject>(size);
 
-            FindMainRoot();
-            FindLocalRoot(prefab);
+            _mainRoot = tracker.FindMainRoot(this);
+            _localRoot = tracker.FindLocalRoot(this, prefab);
+            _id = prefab.name;
             Create(prefab, size);
-        }
-
-        private void FindMainRoot()
-        {
-            if (_mainRoot != null) return;
-
-            var mainRoot = GameObject.Find("PoolSystem");
-            if (mainRoot == null)
-            {
-                mainRoot = new GameObject("PoolSystem");
-                mainRoot.transform.SetAsLastSibling();
-            }
-            _mainRoot = mainRoot;
-        }
-
-        private void FindLocalRoot(GameObject prefab)
-        {
-            if (_localRoot != null) return;
-
-            _localRoot = GameObject.Find(prefab.name + "Pool");
-            if (_localRoot == null)
-            {
-                _localRoot = new GameObject(prefab.name + "Pool");
-            }
-            _localRoot.transform.SetParent(_mainRoot.transform);
         }
 
         private void Create(GameObject prefab, int amount = 10)
@@ -76,21 +54,13 @@ namespace BrightLib.Pooling.Runtime
             }
         }
 
-        private void HandlePoolableRelease(GameObject go)
-        {
-            _available.Enqueue(go);
-        }
-
-        public bool HasAvailable()
-        {
-            return _available.Count > 0;
-        }
-
         public GameObject FetchAvailable()
         {
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<IPoolable>();
             poolable.Aquire();
+            onPoolableAquire?.Invoke(_id, _entries.Length, InUseTotal);
+
             return entry;
         }
 
@@ -99,6 +69,8 @@ namespace BrightLib.Pooling.Runtime
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<IPoolable>();
             poolable.Aquire();
+            onPoolableAquire?.Invoke(_id, _entries.Length, InUseTotal);
+
             component = entry.GetComponent<T>();
             return entry;
         }
@@ -112,7 +84,20 @@ namespace BrightLib.Pooling.Runtime
             }
         }
 
+        public bool HasAvailable()
+        {
+            return _available.Count > 0;
+        }
+
+        private void HandlePoolableRelease(GameObject go)
+        {
+            _available.Enqueue(go);
+            onPoolableRelease?.Invoke(_id, _entries.Length, InUseTotal);
+        }
+
         public GameObject[] Entries { get => _entries; }
         public int InUseTotal { get => _entries.Length - _available.Count; }
+        public GameObject MainRoot { get => _mainRoot; }
+        public GameObject LocalRoot { get => _localRoot; }
     }
 }

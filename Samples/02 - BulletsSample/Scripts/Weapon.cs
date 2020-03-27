@@ -5,6 +5,7 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 {
     public class Weapon : MonoBehaviour
     {
+        public GameObject visuals;
         public Transform emissionSpot;
         public float fireRate = 0.1f;
         public int clipSize = 12;

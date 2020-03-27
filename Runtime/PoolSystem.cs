@@ -5,11 +5,20 @@ using UnityEngine;
 namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
+    /// A delegate for events that happen inside the pool
+    /// </summary>
+    /// <param name="poolableName">The Id to the poolable object</param>
+    /// <param name="poolSize">The total size of the pool</param>
+    /// <param name="poolableInUse">The amount of poolables currently in-use</param>
+    public delegate void PoolAction(string poolableName, int poolSize, int poolableInUse);
+
+    /// <summary>
     /// Creates and maintains all the pools available
     /// </summary>
     public class PoolSystem
     {
         private Dictionary<string, Pool> _pools;
+        private PoolTracker _poolTracker;
 
         private static PoolSystem _instance;
 
@@ -29,6 +38,7 @@ namespace BrightLib.Pooling.Runtime
         private PoolSystem()
         {
             _pools = new Dictionary<string, Pool>();
+            _poolTracker = new PoolTracker();
         }
 
         /// <summary>
@@ -164,17 +174,33 @@ namespace BrightLib.Pooling.Runtime
             return pool.InUseTotal;
         }
 
-        public GameObject[] ExecutePeek(string id)
+        /// <summary>
+        /// Adds a listener to <paramref name="id"/>'s <paramref name="evt"/>
+        /// </summary>
+        /// <param name="id">The poolable ID</param>
+        /// <param name="evt">The event type</param>
+        /// <param name="target">The callback method to be added</param>
+        public static void AddListener(string id, PoolEvent evt, PoolAction target)
         {
-            var entries = _pools[id].Entries;
-            return entries;
+            Instance.ExecuteAddListener(id, evt, target);
+        }
+
+        /// <summary>
+        /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
+        /// </summary>
+        /// <param name="id">The poolable ID</param>
+        /// <param name="evt">The event type</param>
+        /// <param name="target">The callback method to be removed</param>
+        public static void RemoveListener(string id, PoolEvent evt, PoolAction target)
+        {
+            Instance.ExecuteRemoveListener(id, evt, target);
         }
 
         #region Private Methods
 
         private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
         {
-            var pool = new Pool(prefab, size);
+            var pool = new Pool(prefab, size, _poolTracker);
             _pools.Add(id, pool);
         }
 
@@ -204,6 +230,39 @@ namespace BrightLib.Pooling.Runtime
 
             return _pools[id].HasAvailable();
         }
+
+        private GameObject[] ExecutePeek(string id)
+        {
+            var entries = _pools[id].Entries;
+            return entries;
+        }
+
+        private void ExecuteAddListener(string id, PoolEvent evt, PoolAction target)
+        {
+            if(!_pools.ContainsKey(id))
+            {
+                Debug.LogWarning("No {id} pool found.");
+                return;
+            }
+
+            var pool = _pools[id];
+            if (evt == PoolEvent.OnAquire) pool.onPoolableAquire += target;
+            else pool.onPoolableRelease += target;
+        }
+
+        private void ExecuteRemoveListener(string id, PoolEvent evt, PoolAction target)
+        {
+            if (!_pools.ContainsKey(id))
+            {
+                Debug.LogWarning("No {id} pool found.");
+                return;
+            }
+
+            var pool = _pools[id];
+            if (evt == PoolEvent.OnAquire) pool.onPoolableAquire -= target;
+            else pool.onPoolableRelease -= target;
+        }
+        
 
         #endregion
     }

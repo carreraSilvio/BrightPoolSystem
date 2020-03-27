@@ -18,7 +18,7 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 
 		public void Move(Vector3 desiredMoveDirection)
 		{
-			desiredMoveDirection = desiredMoveDirection * speed;
+			desiredMoveDirection *= speed;
 
 			_characterController.Move(desiredMoveDirection * Time.deltaTime);
 		}

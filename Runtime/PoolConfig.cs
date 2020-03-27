@@ -3,7 +3,7 @@
 namespace BrightLib.Pooling.Runtime
 {
     [System.Serializable]
-    public class PrefabPoolConfig
+    public class PoolConfig
     {
         public IPoolable prefabPoolable;
         public GameObject prefab;

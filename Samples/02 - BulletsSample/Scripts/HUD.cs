@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using BrightLib.Pooling.Runtime;
+using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BrightLib.Pooling.Samples.BulletsSample
@@ -12,7 +14,6 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 
 		[SerializeField]
 		private Text _stateField = default;
-
 
 		public void LateUpdate()
 		{

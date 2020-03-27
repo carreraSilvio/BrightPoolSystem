@@ -2,8 +2,8 @@
 
 public class CameraRig : MonoBehaviour 
 {
-	[SerializeField]private Camera _camera;
-	[SerializeField]private Transform _character;
+	[SerializeField]private Camera _camera = default;
+	[SerializeField]private Transform _character = default;
 
 	public float moveSpeed = 3f;
 	public float rotateSpeed = 20f;
