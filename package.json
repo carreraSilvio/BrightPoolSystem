@@ -1,13 +1,13 @@
 {
   "name": "com.brightlib.poolsystem",
   "version": "1.0.0",
-  "displayName": "Pool System Speed",
+  "displayName": "Bright Pool System",
   "description": "Create and manage object pools.",
   "unity": "2018.2",
   "unityRelease": "15f1",
   "author": 
   {
     "name": "Silvio Carréra",
-    "url": "https://bitbucket.org/carreraSilvio/poolSystem"
+    "url": "https://github.com/silviocarrera/BrightPoolSystem"
   }
 }
