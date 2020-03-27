@@ -63,7 +63,7 @@ private void Shoot()
 {
     if (PoolSystem.TryFetchAvailable("Bullet", out PrefabPoolable bullet))
     {
-        PrefabPoolable.transform.position = transform.position;
+        bullet.transform.position = transform.position;
     }
     else
     {
