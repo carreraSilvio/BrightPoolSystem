@@ -9,5 +9,18 @@
   {
     "name": "Silvio Carréra",
     "url": "https://github.com/silviocarrera/BrightPoolSystem"
-  }
+  },
+  "samples": 
+  [
+    {
+        "displayName": "01 - CubeSample",
+        "description": "A pool of cubes is created. The cubes die after a short time and are reused.",
+        "path": "Samples~/01 - CubeSample"
+    },
+    {
+        "displayName": "02 - BulletsSample",
+        "description": "FPS shooting mechanic with bullets being reused from a pool.",
+        "path": "Samples~/02 - BulletsSample"
+    }
+  ]
 }
