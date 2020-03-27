@@ -1,5 +1,5 @@
 # Bright Pool System
-Creates and manages accces to your pools. 
+Creates and manages access to your pools. 
 
 ## Features
 * Create pools when it's best for your project.
@@ -25,7 +25,7 @@ Unity 2018.3 and up
 
 		{
     		"dependencies": {
-        		"com.brightlib.poolsystem": "https://github.com/carreraSilvio/brightlibpoolsystem.git"
+        		"com.brightlib.poolsystem": "https://github.com/carreraSilvio/poolsystem.git"
     		}
 		}
 
