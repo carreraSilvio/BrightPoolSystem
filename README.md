@@ -1,6 +1,7 @@
 # Bright Pool System
 Creates and manages access to your pools. 
 
+![Imgur](https://i.imgur.com/XcPNTTL.gif)
 
 ## Features
 * Create pools when it's best for your project.
