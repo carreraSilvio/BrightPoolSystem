@@ -46,7 +46,6 @@ Unity 2018.3 and up
 
 #### Option B
 ```csharp
-
 public string poolableId;
 public GameObject poolablePrefab;
 public int poolSize;
