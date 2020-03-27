@@ -1,7 +1,7 @@
 # Bright Pool System
 Creates and manages access to your pools. 
 
-![Photo](https://flic.kr/p/2iJfn6a)
+![Photo](https://www.dropbox.com/s/sf7sftr0bnsih7n/9QZj5uc.gif)
 
 
 
