@@ -3,21 +3,26 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
-
     public class Pool
     {
         public PoolAction onPoolableAquire;
         public PoolAction onPoolableRelease;
 
+        private GameObject _prefab;
         private GameObject[] _entries;
         private Queue<GameObject> _available;
 
-        private static GameObject _mainRoot;
         private GameObject _localRoot;
 
-        private string _id;
+        private readonly string _id;
 
         public Pool(GameObject prefab, int size, PoolTracker tracker)
+              : this(prefab.name, prefab, size, tracker)
+        { 
+            
+        }
+
+        public Pool(string id, GameObject prefab, int size, PoolTracker tracker)
         {
             var poolable = prefab.GetComponentInChildren<IPoolable>(true);
             if (poolable == null)
@@ -26,12 +31,12 @@ namespace BrightLib.Pooling.Runtime
                 return;
             }
 
+            _prefab = prefab;
             _entries = new GameObject[size];
             _available = new Queue<GameObject>(size);
 
-            _mainRoot = tracker.FindMainRoot(this);
             _localRoot = tracker.FindLocalRoot(this, prefab);
-            _id = prefab.name;
+            _id = id;
             Create(prefab, size);
         }
 
@@ -97,7 +102,7 @@ namespace BrightLib.Pooling.Runtime
 
         public GameObject[] Entries { get => _entries; }
         public int InUseTotal { get => _entries.Length - _available.Count; }
-        public GameObject MainRoot { get => _mainRoot; }
         public GameObject LocalRoot { get => _localRoot; }
+        public GameObject Prefab { get => _prefab; set => _prefab = value; }
     }
 }

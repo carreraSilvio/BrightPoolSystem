@@ -45,9 +45,8 @@ namespace BrightLib.Pooling.Runtime
         /// Create a new pool and add it to list
         /// </summary>
         public static void CreatePool(string id, GameObject prefab, int size = 10)
-        {
-            Instance.ExecuteCreatePool(id, prefab, size);
-        }
+            => Instance.ExecuteCreatePool(id, prefab, size);
+        
 
         /// <summary>
         /// Returns all members of a given pool
@@ -241,7 +240,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if(!_pools.ContainsKey(id))
             {
-                Debug.LogWarning("No {id} pool found.");
+                Debug.LogWarning($"No {id} pool found.");
                 return;
             }
 
@@ -254,7 +253,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if (!_pools.ContainsKey(id))
             {
-                Debug.LogWarning("No {id} pool found.");
+                Debug.LogWarning($"No {id} pool found.");
                 return;
             }
 
@@ -262,7 +261,6 @@ namespace BrightLib.Pooling.Runtime
             if (evt == PoolEvent.OnAquire) pool.onPoolableAquire -= target;
             else pool.onPoolableRelease -= target;
         }
-        
 
         #endregion
     }
