@@ -103,6 +103,6 @@ namespace BrightLib.Pooling.Runtime
         public GameObject[] Entries { get => _entries; }
         public int InUseTotal { get => _entries.Length - _available.Count; }
         public GameObject LocalRoot { get => _localRoot; }
-        public GameObject Prefab { get => _prefab; set => _prefab = value; }
+        public GameObject Prefab { get => _prefab;}
     }
 }
