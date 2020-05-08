@@ -27,14 +27,12 @@ namespace BrightLib.Pooling.Runtime
             return _mainRoot;
         }
 
-        public GameObject FindLocalRoot(Pool pool)
+        public GameObject FindLocalRoot(GameObject prefab)
         {
-            if (pool.LocalRoot != null) return pool.LocalRoot;
-
-            var localRoot = GameObject.Find(pool.Prefab.name + "Pool");
+            var localRoot = GameObject.Find(prefab.name + "Pool");
             if (localRoot == null)
             {
-                localRoot = new GameObject(pool.Prefab.name + "Pool");
+                localRoot = new GameObject(prefab.name + "Pool");
             }
             localRoot.transform.SetParent(_mainRoot.transform);
 

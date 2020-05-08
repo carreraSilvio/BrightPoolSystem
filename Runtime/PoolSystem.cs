@@ -199,7 +199,8 @@ namespace BrightLib.Pooling.Runtime
 
         private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
         {
-            var pool = new Pool(prefab, size, _poolTracker);
+            var localRoot = _poolTracker.FindLocalRoot(prefab);
+            var pool = new Pool(prefab, size, localRoot);
             _pools.Add(id, pool);
         }
 

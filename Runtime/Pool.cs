@@ -16,13 +16,13 @@ namespace BrightLib.Pooling.Runtime
 
         private readonly string _id;
 
-        public Pool(GameObject prefab, int size, PoolTracker tracker)
-              : this(prefab.name, prefab, size, tracker)
+        public Pool(GameObject prefab, int size, GameObject localRoot)
+              : this(prefab.name, prefab, size, localRoot)
         { 
             
         }
 
-        public Pool(string id, GameObject prefab, int size, PoolTracker tracker)
+        public Pool(string id, GameObject prefab, int size, GameObject localRoot)
         {
             var poolable = prefab.GetComponentInChildren<IPoolable>(true);
             if (poolable == null)
@@ -35,7 +35,7 @@ namespace BrightLib.Pooling.Runtime
             _entries = new GameObject[size];
             _available = new Queue<GameObject>(size);
 
-            _localRoot = tracker.FindLocalRoot(this, prefab);
+            _localRoot = localRoot;
             _id = id;
             Create(prefab, size);
         }
