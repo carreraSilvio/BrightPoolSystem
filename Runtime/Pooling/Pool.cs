@@ -42,8 +42,7 @@ namespace BrightLib.Pooling.Runtime
 
         private void Create(GameObject prefab, int amount = 10)
         {
-            int index = 0;
-            while (amount > 0)
+            for(int index = 0; index < amount; index++)
             {
                 var entry = Object.Instantiate(prefab);
                 entry.transform.SetParent(_localRoot.transform);
@@ -52,10 +51,8 @@ namespace BrightLib.Pooling.Runtime
 
                 var poolable = entry.GetComponentInChildren<Poolable>(true);
                 poolable.onRelease += HandlePoolableRelease;
-                _entries[index++] = entry;
+                _entries[index] = entry;
                 _available.Enqueue(entry);
-
-                amount--;
             }
         }
 
@@ -70,7 +67,7 @@ namespace BrightLib.Pooling.Runtime
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
             poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, TotalInUse);
+            onPoolableAquire?.Invoke(_id, _entries.Length, TotalAquired);
 
             gameObject = entry;
             return true;
@@ -87,7 +84,7 @@ namespace BrightLib.Pooling.Runtime
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
             poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, TotalInUse);
+            onPoolableAquire?.Invoke(_id, _entries.Length, TotalAquired);
 
             component = entry.GetComponent<T>();
             return true;
@@ -110,11 +107,11 @@ namespace BrightLib.Pooling.Runtime
         private void HandlePoolableRelease(GameObject go)
         {
             _available.Enqueue(go);
-            onPoolableRelease?.Invoke(_id, _entries.Length, TotalInUse);
+            onPoolableRelease?.Invoke(_id, _entries.Length, TotalAquired);
         }
 
         public GameObject[] Entries { get => _entries; }
-        public int TotalInUse { get => _entries.Length - _available.Count; }
+        public int TotalAquired { get => _entries.Length - _available.Count; }
         public GameObject LocalRoot { get => _localRoot; }
         public GameObject Prefab { get => _prefab;}
     }

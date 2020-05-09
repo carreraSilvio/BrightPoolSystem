@@ -4,13 +4,15 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
+
+
     /// <summary>
     /// A delegate for events that happen inside the pool
     /// </summary>
-    /// <param name="poolableName">The Id to the poolable object</param>
+    /// <param name="id">The Id to the poolable object</param>
     /// <param name="poolSize">The total size of the pool</param>
-    /// <param name="poolableInUse">The amount of poolables currently in-use</param>
-    public delegate void PoolAction(string poolableName, int poolSize, int poolableInUse);
+    /// <param name="totalInUse">The amount of poolables currently in-use</param>
+    public delegate void PoolAction(string id, int poolSize, int totalInUse);
 
     /// <summary>
     /// Creates and maintains all the pools available
@@ -52,8 +54,8 @@ namespace BrightLib.Pooling.Runtime
 
         private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
         {
-            var localRoot = _poolTracker.FindLocalRoot(prefab);
-            var pool = new Pool(prefab, size, localRoot);
+            var localRoot = _poolTracker.FindLocalRoot(id);
+            var pool = new Pool(id, prefab, size, localRoot);
             _pools.Add(id, pool);
         }
 
@@ -167,17 +169,20 @@ namespace BrightLib.Pooling.Runtime
         /// Returns the total of objects in the given pool that are "in use"
         /// </summary>
         public static int TotalInUse(Enum enumId)
-         => TotalInUse(enumId.ToString());
+            => TotalInUse(enumId.ToString());
 
         /// <summary>
         /// Returns the total of objects in the given pool that are "in use"
         /// </summary>
         public static int TotalInUse(string id)
+            => Instance.ExecuteTotalInUse(id);
+
+        private int ExecuteTotalInUse(string id)
         {
-            if (!Instance._pools.ContainsKey(id)) return 0;
+            if (!_pools.ContainsKey(id)) return -1;
 
             var pool = Instance._pools[id];
-            return pool.TotalInUse;
+            return pool.TotalAquired;
         }
 
         #endregion

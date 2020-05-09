@@ -4,7 +4,7 @@ namespace BrightLib.Pooling.Runtime
 {
     public class PoolTracker
     {
-        private static readonly string _kMainRootName = "PoolSystem";
+        private static readonly string _kMainRootName = "Pools";
         private GameObject _mainRoot;
 
         private GameObject CreateMainRoot()
@@ -27,12 +27,12 @@ namespace BrightLib.Pooling.Runtime
             return _mainRoot;
         }
 
-        public GameObject FindLocalRoot(GameObject prefab)
+        public GameObject FindLocalRoot(string id)
         {
-            var localRoot = GameObject.Find(prefab.name + "Pool");
+            var localRoot = GameObject.Find(id + "Pool");
             if (localRoot == null)
             {
-                localRoot = new GameObject(prefab.name + "Pool");
+                localRoot = new GameObject(id + "Pool");
             }
             localRoot.transform.SetParent(_mainRoot.transform);
 
