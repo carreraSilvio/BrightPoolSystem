@@ -68,7 +68,7 @@ namespace BrightLib.Pooling.Samples.BulletsSample
 
         private void Shoot()
         {
-            if (PoolSystem.TryFetchAvailable("Bullet", out Bullet bullet))
+            if (PoolSystem.FetchAvailable("Bullet", out Bullet bullet))
             {
                 bullet.transform.position = emissionSpot.position;
                 bullet.Fire(emissionSpot.forward * shootForce, range);

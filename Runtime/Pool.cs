@@ -8,13 +8,13 @@ namespace BrightLib.Pooling.Runtime
         public PoolAction onPoolableAquire;
         public PoolAction onPoolableRelease;
 
-        private GameObject _prefab;
-        private GameObject[] _entries;
-        private Queue<GameObject> _available;
-
         private GameObject _localRoot;
 
         private readonly string _id;
+        private GameObject _prefab;
+
+        private GameObject[] _entries;
+        private Queue<GameObject> _available;
 
         public Pool(GameObject prefab, int size, GameObject localRoot)
               : this(prefab.name, prefab, size, localRoot)
@@ -24,10 +24,10 @@ namespace BrightLib.Pooling.Runtime
 
         public Pool(string id, GameObject prefab, int size, GameObject localRoot)
         {
-            var poolable = prefab.GetComponentInChildren<IPoolable>(true);
+            var poolable = prefab.GetComponentInChildren<Poolable>(true);
             if (poolable == null)
             {
-                Debug.LogWarning($"No {nameof(IPoolable)} found in {prefab.name} prefab. Make sure one script implements it.");
+                Debug.LogWarning($"No {nameof(Poolable)} found in {prefab.name} prefab. Make sure one script extends from it.");
                 return;
             }
 
@@ -45,47 +45,60 @@ namespace BrightLib.Pooling.Runtime
             int index = 0;
             while (amount > 0)
             {
-                var go = Object.Instantiate(prefab);
-                go.transform.SetParent(_localRoot.transform);
-                go.name = prefab.name + index;
-                go.SetActive(false);
+                var entry = Object.Instantiate(prefab);
+                entry.transform.SetParent(_localRoot.transform);
+                entry.name = prefab.name + index;
+                entry.SetActive(false);
 
-                var poolable = go.GetComponentInChildren<IPoolable>(true);
+                var poolable = entry.GetComponentInChildren<Poolable>(true);
                 poolable.onRelease += HandlePoolableRelease;
-                _entries[index++] = go;
-                _available.Enqueue(go);
+                _entries[index++] = entry;
+                _available.Enqueue(entry);
 
                 amount--;
             }
         }
 
-        public GameObject FetchAvailable()
+        public bool FetchAvailable(out GameObject gameObject)
         {
-            var entry = _available.Dequeue();
-            var poolable = entry.GetComponent<IPoolable>();
-            poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, InUseTotal);
+            if (!HasAvailable())
+            {
+                gameObject = default;
+                return false;
+            }
 
-            return entry;
+            var entry = _available.Dequeue();
+            var poolable = entry.GetComponent<Poolable>();
+            poolable.Aquire();
+            onPoolableAquire?.Invoke(_id, _entries.Length, TotalInUse);
+
+            gameObject = entry;
+            return true;
         }
 
-        public GameObject FetchAvailable<T>(out T component) where T : MonoBehaviour 
+        public bool FetchAvailable<T>(out T component) where T : MonoBehaviour 
         {
+            if(!HasAvailable())
+            {
+                component = default;
+                return false;
+            }
+
             var entry = _available.Dequeue();
-            var poolable = entry.GetComponent<IPoolable>();
+            var poolable = entry.GetComponent<Poolable>();
             poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, InUseTotal);
+            onPoolableAquire?.Invoke(_id, _entries.Length, TotalInUse);
 
             component = entry.GetComponent<T>();
-            return entry;
+            return true;
         }
 
         public void ReleaseAll()
         {
             foreach (var entry in _entries)
             {
-                var poolable = entry.GetComponent<IPoolable>();
-                poolable.Release();
+                var poolable = entry.GetComponent<Poolable>();
+                if(poolable.Aquired) poolable.Release();
             }
         }
 
@@ -97,11 +110,11 @@ namespace BrightLib.Pooling.Runtime
         private void HandlePoolableRelease(GameObject go)
         {
             _available.Enqueue(go);
-            onPoolableRelease?.Invoke(_id, _entries.Length, InUseTotal);
+            onPoolableRelease?.Invoke(_id, _entries.Length, TotalInUse);
         }
 
         public GameObject[] Entries { get => _entries; }
-        public int InUseTotal { get => _entries.Length - _available.Count; }
+        public int TotalInUse { get => _entries.Length - _available.Count; }
         public GameObject LocalRoot { get => _localRoot; }
         public GameObject Prefab { get => _prefab;}
     }

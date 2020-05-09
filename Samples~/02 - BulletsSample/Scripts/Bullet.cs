@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BrightLib.Pooling.Samples.BulletsSample
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Bullet : PrefabPoolable
+    public class Bullet : Poolable
     {
         [SerializeField]
         private Rigidbody _rigidbody = default;
@@ -22,9 +22,8 @@ namespace BrightLib.Pooling.Samples.BulletsSample
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        public override void OnDisable()
+        public void OnDisable()
         {
-            base.OnDisable();
             _rigidbody.velocity = Vector3.zero;
         }
 
@@ -34,7 +33,7 @@ namespace BrightLib.Pooling.Samples.BulletsSample
             {
                 if(Vector3.Distance(_positionFired, transform.position) >= _range)
                 {
-                    gameObject.SetActive(false);
+                    Release();
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace BrightLib.Pooling.Runtime
         {
             foreach (var config in _configs)
             {
-                PoolSystem.CreatePool(config.prefab.name, config.prefab, config.size);
+                PoolSystem.CreatePool(config.id, config.prefab, config.size);
             }
             Destroy(gameObject);
         }

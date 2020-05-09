@@ -39,128 +39,135 @@ namespace BrightLib.Pooling.Runtime
         {
             _pools = new Dictionary<string, Pool>();
             _poolTracker = new PoolTracker();
+            _poolTracker.FindMainRoot();
         }
+
+        #region CreatePool
 
         /// <summary>
         /// Create a new pool and add it to list
         /// </summary>
         public static void CreatePool(string id, GameObject prefab, int size = 10)
             => Instance.ExecuteCreatePool(id, prefab, size);
-        
+
+        private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
+        {
+            var localRoot = _poolTracker.FindLocalRoot(prefab);
+            var pool = new Pool(prefab, size, localRoot);
+            _pools.Add(id, pool);
+        }
+
+        #endregion
+
+        #region Peek
 
         /// <summary>
         /// Returns all members of a given pool
         /// </summary>
         public static GameObject[] Peek(Enum enumId)
+            => Instance.ExecutePeek(enumId.ToString());
+
+        private GameObject[] ExecutePeek(string id)
         {
-            return Instance.ExecutePeek(enumId.ToString());
+            var entries = _pools[id].Entries;
+            return entries;
         }
+
+        #endregion
+
+        #region FetchAvailable
 
         /// <summary>
         /// Searches for an available object and if it finds one, aquires it and returns.
         /// </summary>
-        public static bool TryFetchAvailable(string id, out GameObject gameObject)
-        {
-            var result = HasAvailable(id);
-            gameObject = result ? FetchAvailable(id) : default;
-
-            return result;
-        }
+        public static bool FetchAvailable(string id, out GameObject gameObject)
+            => Instance.ExecuteFetchAvailable(id, out gameObject);
 
         /// <summary>
         /// Searches for an available object and if it finds one, aquires it and returns.
         /// </summary>
-        public static bool TryFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
-        {
-            component = default;
-            var result = HasAvailable(id);
-            if(result) FetchAvailable(id, out component);
+        public static bool FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
+            => Instance.ExecuteFetchAvailable<T>(id, out component);
 
-            return result;
+        private bool ExecuteFetchAvailable(string id, out GameObject gameObject)
+        {
+            if (!_pools.ContainsKey(id))
+            {
+                gameObject = default;
+                return false;
+            }
+
+            var pool = _pools[id];
+            pool.FetchAvailable(out gameObject);
+            return true;
         }
 
-        /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
-        /// </summary>
-        public static GameObject FetchAvailable(Enum enumId)
+        private bool ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
         {
-            return FetchAvailable(enumId.ToString());
+            if (!_pools.ContainsKey(id))
+            {
+                component = default;
+                return false;
+            }
+
+            var pool = _pools[id];
+            pool.FetchAvailable(out component);
+            return true;
         }
 
-        /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
-        /// </summary>
-        public static GameObject FetchAvailable(string id)
-        {
-            return Instance.ExecuteFetchAvailable(id);
-        }
+        #endregion
+
+        #region HasAvailable
 
         /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
-        /// </summary>
-        public static GameObject FetchAvailable<T>(Enum enumId, out T component) where T : MonoBehaviour
-        {
-            return FetchAvailable(enumId.ToString(), out component);
-        }
-
-        /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
-        /// </summary>
-        public static GameObject FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
-        {
-            return Instance.ExecuteFetchAvailable(id, out component);
-        }
-
-        /// <summary>
-        /// Returns true if there's a object available
+        /// Returns true if there's an object available
         /// </summary>
         public static bool HasAvailable(Enum enumId)
-        {
-            return HasAvailable(enumId.ToString());
-        }
-
+            => HasAvailable(enumId.ToString());
+        
         /// <summary>
-        /// Returns true if there's a object available
+        /// Returns true if there's an object available
         /// </summary>
         public static bool HasAvailable(string id)
+            => Instance.ExecuteHasAvailable(id);
+        private bool ExecuteHasAvailable(string id)
         {
-            return Instance.ExecuteHasAvailable(id);
+            if (!_pools.ContainsKey(id)) return false;
+
+            return _pools[id].HasAvailable();
         }
+
+        #endregion
+
+        #region HasPool
 
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
-        public static bool HasPool(Enum enumId)
-        {
-            return HasPool(enumId.ToString());
-        }
+        public static bool HasPool(Enum enumId) 
+            => HasPool(enumId.ToString());
+        
 
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
         public static bool HasPool(string id)
+            => Instance.ExecuteHasPool(id);
+
+        private bool ExecuteHasPool(string id)
         {
-            return Instance._pools.ContainsKey(id);
+            return _pools.ContainsKey(id);
         }
 
-        /// <summary>
-        /// Go through each pool releasing all acquired objects
-        /// </summary>
-        public static void ReleaseAll()
-        {
-            foreach (var pool in Instance._pools.Values)
-            {
-                pool.ReleaseAll();
-            }
-        }
+        #endregion
+
+        #region TotalInUse
+
         /// <summary>
         /// Returns the total of objects in the given pool that are "in use"
         /// </summary>
-        public static int InUseTotal(Enum enumId)
-        {
-            return TotalInUse(enumId.ToString());
-        }
-
+        public static int TotalInUse(Enum enumId)
+         => TotalInUse(enumId.ToString());
 
         /// <summary>
         /// Returns the total of objects in the given pool that are "in use"
@@ -170,8 +177,12 @@ namespace BrightLib.Pooling.Runtime
             if (!Instance._pools.ContainsKey(id)) return 0;
 
             var pool = Instance._pools[id];
-            return pool.InUseTotal;
+            return pool.TotalInUse;
         }
+
+        #endregion
+
+        #region Event Access
 
         /// <summary>
         /// Adds a listener to <paramref name="id"/>'s <paramref name="evt"/>
@@ -195,51 +206,9 @@ namespace BrightLib.Pooling.Runtime
             Instance.ExecuteRemoveListener(id, evt, target);
         }
 
-        #region Private Methods
-
-        private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
-        {
-            var localRoot = _poolTracker.FindLocalRoot(prefab);
-            var pool = new Pool(prefab, size, localRoot);
-            _pools.Add(id, pool);
-        }
-
-        private GameObject ExecuteFetchAvailable(string id)
-        {
-            if (!_pools.ContainsKey(id)) return null;
-
-            var pool = _pools[id];
-            return pool.FetchAvailable();
-        }
-
-        private GameObject ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
-        {
-            if (!_pools.ContainsKey(id))
-            {
-                component = default;
-                return null;
-            }
-
-            var pool = _pools[id];
-            return pool.FetchAvailable(out component);
-        }
-
-        private bool ExecuteHasAvailable(string id)
-        {
-            if (!_pools.ContainsKey(id)) return false;
-
-            return _pools[id].HasAvailable();
-        }
-
-        private GameObject[] ExecutePeek(string id)
-        {
-            var entries = _pools[id].Entries;
-            return entries;
-        }
-
         private void ExecuteAddListener(string id, PoolEvent evt, PoolAction target)
         {
-            if(!_pools.ContainsKey(id))
+            if (!_pools.ContainsKey(id))
             {
                 Debug.LogWarning($"No {id} pool found.");
                 return;
@@ -261,6 +230,24 @@ namespace BrightLib.Pooling.Runtime
             var pool = _pools[id];
             if (evt == PoolEvent.OnAquire) pool.onPoolableAquire -= target;
             else pool.onPoolableRelease -= target;
+        }
+
+        #endregion
+
+        #region ReleaseAll
+
+        /// <summary>
+        /// Go through each pool releasing all acquired objects
+        /// </summary>
+        public static void ReleaseAll()
+            => Instance.ExecuteReleaseAll();
+
+        private void ExecuteReleaseAll()
+        {
+            foreach (var pool in _pools.Values)
+            {
+                pool.ReleaseAll();
+            }
         }
 
         #endregion

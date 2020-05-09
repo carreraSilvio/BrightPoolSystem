@@ -841,7 +841,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _configs:
-  - prefab: {fileID: 9487012888627500, guid: 5212202441f6fa64cb240261470553e0, type: 3}
+  - id: Bullet
+    prefab: {fileID: 9487012888627500, guid: 5212202441f6fa64cb240261470553e0, type: 3}
     size: 20
 --- !u!4 &728187592
 Transform:

@@ -29,15 +29,13 @@ namespace BrightLib.Pooling.Samples.CubeSample
 
         private void Spawn()
         {
-            var poolableGamObj = PoolSystem.FetchAvailable<CubePoolable>("Cube", out CubePoolable poolable);
-            if(poolable != null)
+            if(PoolSystem.FetchAvailable("Cube", out GameObject cubeGameObject))
             {
-                var pos = poolableGamObj.transform.position;
+                var pos = cubeGameObject.transform.position;
                 pos.x += Random.Range(-spawnRange.x, spawnRange.x);
                 pos.y += Random.Range(-spawnRange.y, spawnRange.y);
                 pos.z += Random.Range(-spawnRange.z, spawnRange.z);
-                poolableGamObj.transform.position = pos;
-                poolable.Aquire();
+                cubeGameObject.transform.position = pos;
             }
         }
     }

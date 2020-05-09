@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Samples.CubeSample
 {
-    public class CubePoolable : MonoBehaviour, IPoolable
+    public class CubePoolable : Poolable
     {
-        public event Action<GameObject> onRelease;
-
         public float lifeDuration = 1f;
 
         private float _timeBorn;
@@ -30,16 +28,10 @@ namespace BrightLib.Pooling.Samples.CubeSample
             }
         }
 
-        public void Aquire()
+        private void OnEnable()
         {
             _timeBorn = Time.time;
-            gameObject.SetActive(true);
         }
 
-        public void Release()
-        {
-            gameObject.SetActive(false);
-            onRelease?.Invoke(gameObject);
-        }
     }
 }
