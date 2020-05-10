@@ -21,18 +21,18 @@ namespace BrightLib.Pooling.Runtime
         }
 
         public static int TotalSpawned(string id)
-            => PoolSystem.TotalInUse(id);
+            => PoolSystem.TotalAquired(id);
 
         #region Spawn (out Poolable)
 
-        public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance, out Poolable poolable)
+        public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
             => Spawn(idEnum.ToString(), spawnPoints, spawnDistance, out poolable);
         public static bool Spawn(Enum idEnum, Transform transform, out Poolable poolable)
             => Instance.ExecuteSpawn(idEnum.ToString(), transform.position, out poolable);
         public static bool Spawn(Enum idEnum, out Poolable poolable)
             => Instance.ExecuteSpawn(idEnum.ToString(), Vector3.zero, out poolable);
 
-        public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance, out Poolable poolable)
+        public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
             var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
             return Instance.ExecuteSpawn(id, position, out poolable);
@@ -61,14 +61,14 @@ namespace BrightLib.Pooling.Runtime
 
         #region Spawn (NO out poolable)
         
-        public bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
+        public bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
             => Spawn(idEnum.ToString(), spawnPoints, spawnDistance);
         public bool Spawn(Enum idEnum, Transform transform)
             => Spawn(idEnum.ToString(), transform.position);
         public bool Spawn(Enum idEnum)
             => Spawn(idEnum.ToString(), Vector3.zero);
 
-        public bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
+        public bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
             var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
             return Spawn(id, position);

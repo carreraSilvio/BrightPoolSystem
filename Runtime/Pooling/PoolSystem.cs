@@ -147,7 +147,6 @@ namespace BrightLib.Pooling.Runtime
         public static bool HasPool(Enum enumId) 
             => HasPool(enumId.ToString());
         
-
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
@@ -161,26 +160,29 @@ namespace BrightLib.Pooling.Runtime
 
         #endregion
 
-        #region TotalInUse
+        #region TotalAquired
 
         /// <summary>
-        /// Returns the total of objects in the given pool that are "in use"
+        /// Returns the total of objects in the given pool that are aquired
         /// </summary>
-        public static int TotalInUse(Enum enumId)
-            => TotalInUse(enumId.ToString());
+        public static int TotalAquired(Enum enumId)
+            => TotalAquired(enumId.ToString());
 
         /// <summary>
-        /// Returns the total of objects in the given pool that are "in use"
+        /// Returns the total of objects in the given pool that are aquired
         /// </summary>
-        public static int TotalInUse(string id)
-            => Instance.ExecuteTotalInUse(id);
+        public static int TotalAquired(string id)
+            => Instance.ExecuteTotalAquired(id);
 
-        private int ExecuteTotalInUse(string id)
+        private int ExecuteTotalAquired(string id)
         {
-            if (!_pools.ContainsKey(id)) return -1;
+            if (!_pools.ContainsKey(id))
+            {
+                Debug.LogWarning($"No {id} pool found.");
+                return -1;
+            }
 
-            var pool = Instance._pools[id];
-            return pool.TotalAquired;
+            return _pools[id].TotalAquired;
         }
 
         #endregion

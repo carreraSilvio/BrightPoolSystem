@@ -4,7 +4,7 @@ namespace BrightLib.Pooling.Runtime
 {
     public static class SpawnerUtils
     {
-        public static Vector3 FetchSpawnPointPosition(SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
+        public static Vector3 FetchSpawnPointPosition(SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
             var targetIndex = 0;
             var distance = -1f;
@@ -12,7 +12,7 @@ namespace BrightLib.Pooling.Runtime
             for (int i = 0; i < spawnPoints.Length; i++)
             {
                 var sp = spawnPoints[i];
-                if (spawnDistance == SpawnDistance.Far)
+                if (spawnDistance == SpawnDistanceType.Far)
                 {
                     if (sp.DistanceToPlayer >= distance)
                     {
@@ -20,7 +20,7 @@ namespace BrightLib.Pooling.Runtime
                         targetIndex = i;
                     }
                 }
-                else if (spawnDistance == SpawnDistance.Close)
+                else if (spawnDistance == SpawnDistanceType.Close)
                 {
                     if (sp.DistanceToPlayer <= distance)
                     {

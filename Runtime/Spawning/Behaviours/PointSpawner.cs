@@ -8,7 +8,7 @@ namespace BrightLib.Pooling.Runtime
         private SpawnPoint[] _spawnPoints = default;
 
         [SerializeField]
-        private SpawnDistance _spawnDistance = default;
+        private SpawnDistanceType _spawnDistance = default;
 
         [SerializeField, Tooltip("Will skip choosing the same spawn point in a row")]
         private bool _avoidRepeating = true;
@@ -45,7 +45,7 @@ namespace BrightLib.Pooling.Runtime
             }
         }
 
-        public Vector3 FetchSpawnPointPosition(SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
+        public Vector3 FetchSpawnPointPosition(SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
             var targetIndex = 0;
             var distance = -1f;
@@ -55,7 +55,7 @@ namespace BrightLib.Pooling.Runtime
                 if (_avoidRepeating && i == _lastSpawnPointIndex) continue;
 
                 var sp = spawnPoints[i];
-                if (spawnDistance == SpawnDistance.Far)
+                if (spawnDistance == SpawnDistanceType.Far)
                 {
                     if (sp.DistanceToPlayer >= distance)
                     {
@@ -63,7 +63,7 @@ namespace BrightLib.Pooling.Runtime
                         targetIndex = i;
                     }
                 }
-                else if (spawnDistance == SpawnDistance.Close)
+                else if (spawnDistance == SpawnDistanceType.Close)
                 {
                     if (sp.DistanceToPlayer <= distance)
                     {
