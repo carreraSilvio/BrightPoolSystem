@@ -24,7 +24,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if (SpawnSystem.Spawn(id, out Poolable gameObject))
             {
-                var pos = gameObject.transform.position;
+                var pos = transform.position;
                 pos.x += Random.Range(-range.x, range.x);
                 pos.y += Random.Range(-range.y, range.y);
                 pos.z += Random.Range(-range.z, range.z);

@@ -6,6 +6,8 @@
 public class SpawnPoint : MonoBehaviour
 {
     private static GameObject _playerChar;
+
+
     private float _distanceToPlayer;
     private float _lastTimeUsed;
 

@@ -21,6 +21,23 @@ namespace BrightLib.Pooling.Runtime
         {
             _aquired = true;
             gameObject.SetActive(true);
+            OnAquire();
+        }
+
+        /// <summary>
+        /// Called after the object is Aquired.
+        /// </summary>
+        public virtual void OnAquire()
+        {
+
+        }
+
+        /// <summary>
+        /// Called after the object is Released.
+        /// </summary>
+        public virtual void OnRelease()
+        {
+
         }
 
         /// <summary>
@@ -33,6 +50,7 @@ namespace BrightLib.Pooling.Runtime
             _aquired = false;
             gameObject.SetActive(false);
             onRelease?.Invoke(gameObject);
+            OnRelease();
         }
 
     }

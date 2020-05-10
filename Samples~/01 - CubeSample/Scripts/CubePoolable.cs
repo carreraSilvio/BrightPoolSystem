@@ -1,5 +1,4 @@
 ﻿using BrightLib.Pooling.Runtime;
-using System;
 using UnityEngine;
 
 namespace BrightLib.Pooling.Samples.CubeSample
@@ -12,12 +11,33 @@ namespace BrightLib.Pooling.Samples.CubeSample
 
         private void Awake()
         {
-            //Debug.Log("cube awake");
+            //Debug.Log($"{name} awake");
         }
 
         private void Start()
         {
-            //Debug.Log("cube start");
+            //Debug.Log($"{name} start");
+        }
+
+        private void OnEnable()
+        {
+            //Debug.Log($"{name} OnEnable");
+        }
+
+        private void OnDisable()
+        {
+            //Debug.Log($"{name} OnDisable");
+        }
+
+        public override void OnAquire()
+        {
+            Debug.Log($"{name} OnAquire");
+            _timeBorn = Time.time;
+        }
+
+        public override void OnRelease()
+        {
+            Debug.Log($"{name} OnRelease");
         }
 
         private void Update()
@@ -28,10 +48,7 @@ namespace BrightLib.Pooling.Samples.CubeSample
             }
         }
 
-        private void OnEnable()
-        {
-            _timeBorn = Time.time;
-        }
+        
 
     }
 }
