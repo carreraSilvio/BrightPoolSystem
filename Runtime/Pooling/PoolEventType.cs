@@ -1,9 +1,9 @@
 ﻿namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
-    /// Use it with <see cref="PoolSystem.AddListener(string, PoolEvent, PoolAction)"/>
+    /// Use it with <see cref="PoolSystem.AddListener(string, PoolEventType, PoolAction)"/>
     /// </summary>
-    public enum PoolEvent
+    public enum PoolEventType
     {
         OnAquire,
         OnRelease

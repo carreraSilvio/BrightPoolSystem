@@ -2,11 +2,9 @@
 
 namespace BrightLib.Pooling.Runtime
 {
-
     public class RangeSpawner : Spawner
     {
         public Vector3 range;
-        
 
         void Start()
         {
@@ -33,6 +31,10 @@ namespace BrightLib.Pooling.Runtime
                 gameObject.transform.position = pos;
             }
         }
-    }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireCube(transform.position, range);
+        }
+    }
 }

@@ -21,22 +21,20 @@ namespace BrightLib.Pooling.Runtime
         }
 
         public static int TotalSpawned(string id)
-         => PoolSystem.TotalInUse(id);
+            => PoolSystem.TotalInUse(id);
 
         #region Spawn (out Poolable)
 
-        public static bool Spawn(Enum idEnum, SpawnPointController spController, PointSpawnMode pointSpawnerMode, out Poolable poolable)
-            => Spawn(idEnum.ToString(), spController, pointSpawnerMode, out poolable);
+        public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance, out Poolable poolable)
+            => Spawn(idEnum.ToString(), spawnPoints, spawnDistance, out poolable);
         public static bool Spawn(Enum idEnum, Transform transform, out Poolable poolable)
             => Instance.ExecuteSpawn(idEnum.ToString(), transform.position, out poolable);
         public static bool Spawn(Enum idEnum, out Poolable poolable)
             => Instance.ExecuteSpawn(idEnum.ToString(), Vector3.zero, out poolable);
 
-        public static bool Spawn(string id, SpawnPointController spController, PointSpawnMode pointSpawnerMode, out Poolable poolable)
+        public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance, out Poolable poolable)
         {
-            var position = pointSpawnerMode == PointSpawnMode.Close ?
-                spController.FetchCloseSpawnPoint().transform.position :
-                spController.FetchFarSpawnPoint().transform.position;
+            var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
             return Instance.ExecuteSpawn(id, position, out poolable);
         }
 
@@ -54,8 +52,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             poolable = gameObject.GetComponentInChildren<Poolable>();
-            poolable.gameObject.SetActive(true);
-            poolable.gameObject.transform.position = position;
+            gameObject.transform.position = position;
 
             return true;
         }
@@ -63,30 +60,28 @@ namespace BrightLib.Pooling.Runtime
         #endregion
 
         #region Spawn (NO out poolable)
+        
+        public bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
+            => Spawn(idEnum.ToString(), spawnPoints, spawnDistance);
+        public bool Spawn(Enum idEnum, Transform transform)
+            => Spawn(idEnum.ToString(), transform.position);
+        public bool Spawn(Enum idEnum)
+            => Spawn(idEnum.ToString(), Vector3.zero);
 
-        public bool Spawn(Enum spawnerIdEnum, SpawnPointController spController, PointSpawnMode pointSpawnerMode)
-            => Spawn(spawnerIdEnum.ToString(), spController, pointSpawnerMode);
-        public bool Spawn(Enum spawnerIdEnum, Transform transform)
-            => Spawn(spawnerIdEnum.ToString(), transform.position);
-        public bool Spawn(Enum spawnerIdEnum)
-            => Spawn(spawnerIdEnum.ToString(), Vector3.zero);
-
-        public bool Spawn(string spawnerId, SpawnPointController spController, PointSpawnMode pointSpawnerMode)
+        public bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistance spawnDistance)
         {
-            var position = pointSpawnerMode == PointSpawnMode.Close ?
-                spController.FetchCloseSpawnPoint().transform.position :
-                spController.FetchFarSpawnPoint().transform.position;
-            return Spawn(spawnerId, position);
+            var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
+            return Spawn(id, position);
         }
 
-        public bool Spawn(string spawnerId, Transform transform)
-            => Spawn(spawnerId, transform.position);
-        public bool Spawn(string spawnerId)
-            => Spawn(spawnerId, Vector3.zero);
+        public bool Spawn(string id, Transform transform)
+            => Spawn(id, transform.position);
+        public bool Spawn(string id)
+            => Spawn(id, Vector3.zero);
 
-        public bool Spawn(string spawnerId, Vector3 position)
+        public bool Spawn(string id, Vector3 position)
         {
-            if (!PoolSystem.FetchAvailable(spawnerId, out GameObject gameObject))
+            if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
             {
                 return false;
             }

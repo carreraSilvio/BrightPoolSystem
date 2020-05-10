@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
-
-
     /// <summary>
     /// A delegate for events that happen inside the pool
     /// </summary>
@@ -80,13 +78,13 @@ namespace BrightLib.Pooling.Runtime
         #region FetchAvailable
 
         /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
+        /// Searches for an available object and if it finds one and returns it.
         /// </summary>
         public static bool FetchAvailable(string id, out GameObject gameObject)
             => Instance.ExecuteFetchAvailable(id, out gameObject);
 
         /// <summary>
-        /// Searches for an available object and if it finds one, aquires it and returns.
+        /// Searches for an available object and if it finds oneand returns.
         /// </summary>
         public static bool FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
             => Instance.ExecuteFetchAvailable<T>(id, out component);
@@ -195,7 +193,7 @@ namespace BrightLib.Pooling.Runtime
         /// <param name="id">The poolable ID</param>
         /// <param name="evt">The event type</param>
         /// <param name="target">The callback method to be added</param>
-        public static void AddListener(string id, PoolEvent evt, PoolAction target)
+        public static void AddListener(string id, PoolEventType evt, PoolAction target)
         {
             Instance.ExecuteAddListener(id, evt, target);
         }
@@ -206,12 +204,12 @@ namespace BrightLib.Pooling.Runtime
         /// <param name="id">The poolable ID</param>
         /// <param name="evt">The event type</param>
         /// <param name="target">The callback method to be removed</param>
-        public static void RemoveListener(string id, PoolEvent evt, PoolAction target)
+        public static void RemoveListener(string id, PoolEventType evt, PoolAction target)
         {
             Instance.ExecuteRemoveListener(id, evt, target);
         }
 
-        private void ExecuteAddListener(string id, PoolEvent evt, PoolAction target)
+        private void ExecuteAddListener(string id, PoolEventType evt, PoolAction target)
         {
             if (!_pools.ContainsKey(id))
             {
@@ -220,11 +218,11 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEvent.OnAquire) pool.onPoolableAquire += target;
+            if (evt == PoolEventType.OnAquire) pool.onPoolableAquire += target;
             else pool.onPoolableRelease += target;
         }
 
-        private void ExecuteRemoveListener(string id, PoolEvent evt, PoolAction target)
+        private void ExecuteRemoveListener(string id, PoolEventType evt, PoolAction target)
         {
             if (!_pools.ContainsKey(id))
             {
@@ -233,7 +231,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEvent.OnAquire) pool.onPoolableAquire -= target;
+            if (evt == PoolEventType.OnAquire) pool.onPoolableAquire -= target;
             else pool.onPoolableRelease -= target;
         }
 

@@ -1,101 +1,105 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Controls more than one SpawnPoint. Easy entry point to fetch lastUsed or closest/fartest to player
-/// </summary>
-public class SpawnPointController : MonoBehaviour
+namespace BrightLib.Pooling.Runtime
 {
-    [SerializeField]
-    private SpawnPoint[] _spawnPoints = default;
-    private int _lastPointIndex;
 
-    void Reset()
+    /// <summary>
+    /// Controls more than one SpawnPoint. Easy entry point to fetch lastUsed or closest/fartest to player
+    /// </summary>
+    public class SpawnPointController : MonoBehaviour
     {
-        _spawnPoints = GetComponentsInChildren<SpawnPoint>();
-    }
+        [SerializeField]
+        private SpawnPoint[] _spawnPoints = default;
+        private int _lastPointIndex;
 
-    void Awake()
-    {
-        _spawnPoints = GetComponentsInChildren<SpawnPoint>();
-    }
-
-    public SpawnPoint FetchSpawnPoint(int index)
-    {
-        if (Total == -1) return null;
-
-        return (_spawnPoints[index > Total? 0 : index]);
-    }
-
-    public SpawnPoint FetchFarSpawnPoint(bool useUnique = true)
-    {
-        var targetIndex = 0;
-        var distance = 0f;
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
+        void Reset()
         {
-            if (useUnique && i == _lastPointIndex) continue;
-
-            var sp = _spawnPoints[i];
-            if (sp.DistanceToPlayer > distance)
-            {
-                distance = sp.DistanceToPlayer;
-                targetIndex = i;
-            }
+            _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
-        _lastPointIndex = targetIndex;
-        return _spawnPoints[targetIndex];
-    }
-
-    public SpawnPoint FetchCloseSpawnPoint(bool useUnique = true)
-    {
-        var targetIndex = 0;
-        var distance = 1000f;
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
+        void Awake()
         {
-            var spawnPoint = _spawnPoints[i];
-            if (spawnPoint.DistanceToPlayer < distance)
-            {
-                distance = spawnPoint.DistanceToPlayer;
-                targetIndex = i;
-            }
+            _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
-        _lastPointIndex = targetIndex;
-        return _spawnPoints[targetIndex];
-    }
-
-    public bool IsSpawnPointValid(int index)
-    {
-        return (index <= _spawnPoints.Length && index >= 0);
-    }
-
-    public int Total
-    {
-        get { return _spawnPoints != null ? _spawnPoints.Length : -1; }
-    }
-
-
-    void OnDrawGizmos()
-    {
-        if (_spawnPoints == null || _spawnPoints.Length == 0) return;
-        //var player = GameObject.FindObjectOfType<Player>();
-        //if (player == null) return;
-
-        //var lastSp = _spawnPoints[_lastPointIndex];
-        //Gizmos.color = Color.yellow;
-        //Gizmos.DrawLine(player.Character.transform.position, lastSp.transform.position);
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (_spawnPoints == null) return;
-
-        Gizmos.color = Color.yellow;
-        foreach (var point in _spawnPoints)
+        public SpawnPoint FetchSpawnPoint(int index)
         {
-            Gizmos.DrawLine(transform.position, point.transform.position);
+            if (Total == -1) return null;
+
+            return _spawnPoints[index > Total ? 0 : index];
+        }
+
+        public SpawnPoint FetchFarSpawnPoint(bool useUnique = true)
+        {
+            var targetIndex = 0;
+            var distance = 0f;
+
+            for (int i = 0; i < _spawnPoints.Length; i++)
+            {
+                if (useUnique && i == _lastPointIndex) continue;
+
+                var sp = _spawnPoints[i];
+                if (sp.DistanceToPlayer > distance)
+                {
+                    distance = sp.DistanceToPlayer;
+                    targetIndex = i;
+                }
+            }
+
+            _lastPointIndex = targetIndex;
+            return _spawnPoints[targetIndex];
+        }
+
+        public SpawnPoint FetchCloseSpawnPoint(bool useUnique = true)
+        {
+            var targetIndex = 0;
+            var distance = 1000f;
+
+            for (int i = 0; i < _spawnPoints.Length; i++)
+            {
+                var spawnPoint = _spawnPoints[i];
+                if (spawnPoint.DistanceToPlayer < distance)
+                {
+                    distance = spawnPoint.DistanceToPlayer;
+                    targetIndex = i;
+                }
+            }
+
+            _lastPointIndex = targetIndex;
+            return _spawnPoints[targetIndex];
+        }
+
+        public bool IsSpawnPointValid(int index)
+        {
+            return index <= _spawnPoints.Length && index >= 0;
+        }
+
+        public int Total
+        {
+            get { return _spawnPoints != null ? _spawnPoints.Length : -1; }
+        }
+
+
+        void OnDrawGizmos()
+        {
+            if (_spawnPoints == null || _spawnPoints.Length == 0) return;
+            //var player = GameObject.FindObjectOfType<Player>();
+            //if (player == null) return;
+
+            //var lastSp = _spawnPoints[_lastPointIndex];
+            //Gizmos.color = Color.yellow;
+            //Gizmos.DrawLine(player.Character.transform.position, lastSp.transform.position);
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (_spawnPoints == null) return;
+
+            Gizmos.color = Color.yellow;
+            foreach (var point in _spawnPoints)
+            {
+                Gizmos.DrawLine(transform.position, point.transform.position);
+            }
         }
     }
 }

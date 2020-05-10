@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Knows the distance to the player and if it was used to spawn recently or not
+/// Knows the distance to the player and last time it was used to spawn
 /// </summary>
 public class SpawnPoint : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class SpawnPoint : MonoBehaviour
 
     void OnEnable()
     {
-        _playerChar = GameObject.FindGameObjectWithTag("Player");
+        if(_playerChar == null) _playerChar = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class SpawnPoint : MonoBehaviour
     public float DistanceToPlayer { get => _distanceToPlayer;  }
     public float LastTimeUsed { get => _lastTimeUsed; set => _lastTimeUsed = value; }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, 0.2f);

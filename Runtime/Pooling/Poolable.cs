@@ -24,10 +24,12 @@ namespace BrightLib.Pooling.Runtime
         }
 
         /// <summary>
-        /// Returns the object to the pool.
+        /// Returns the object to the pool and disables it.
         /// </summary>
         public void Release()
         {
+            if (!_aquired) return;
+
             _aquired = false;
             gameObject.SetActive(false);
             onRelease?.Invoke(gameObject);
