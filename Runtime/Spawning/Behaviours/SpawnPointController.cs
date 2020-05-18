@@ -79,17 +79,7 @@ namespace BrightLib.Pooling.Runtime
             get { return _spawnPoints != null ? _spawnPoints.Length : -1; }
         }
 
-
-        void OnDrawGizmos()
-        {
-            if (_spawnPoints == null || _spawnPoints.Length == 0) return;
-            //var player = GameObject.FindObjectOfType<Player>();
-            //if (player == null) return;
-
-            //var lastSp = _spawnPoints[_lastPointIndex];
-            //Gizmos.color = Color.yellow;
-            //Gizmos.DrawLine(player.Character.transform.position, lastSp.transform.position);
-        }
+        public SpawnPoint[] SpawnPoints  => _spawnPoints;
 
         void OnDrawGizmosSelected()
         {
