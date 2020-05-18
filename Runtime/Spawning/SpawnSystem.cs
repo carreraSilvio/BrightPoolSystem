@@ -61,25 +61,25 @@ namespace BrightLib.Pooling.Runtime
 
         #region Spawn (NO out poolable)
         
-        public bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
+        public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
             => Spawn(idEnum.ToString(), spawnPoints, spawnDistance);
-        public bool Spawn(Enum idEnum, Transform transform)
-            => Spawn(idEnum.ToString(), transform.position);
-        public bool Spawn(Enum idEnum)
-            => Spawn(idEnum.ToString(), Vector3.zero);
+        public static bool Spawn(Enum idEnum, Transform transform)
+            => Instance.ExecuteSpawn(idEnum.ToString(), transform.position);
+        public static bool Spawn(Enum idEnum)
+            => Instance.ExecuteSpawn(idEnum.ToString(), Vector3.zero);
 
-        public bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
+        public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
             var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
-            return Spawn(id, position);
+            return Instance.ExecuteSpawn(id, position);
         }
 
-        public bool Spawn(string id, Transform transform)
-            => Spawn(id, transform.position);
-        public bool Spawn(string id)
-            => Spawn(id, Vector3.zero);
+        public static bool Spawn(string id, Transform transform)
+            => Instance.ExecuteSpawn(id, transform.position);
+        public static bool Spawn(string id)
+            => Instance.ExecuteSpawn(id, Vector3.zero);
 
-        public bool Spawn(string id, Vector3 position)
+        public bool ExecuteSpawn(string id, Vector3 position)
         {
             if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
             {
