@@ -190,6 +190,13 @@ namespace BrightLib.Pooling.Runtime
         #region Event Access
 
         /// <summary>
+        /// Adds a listener to <paramref name="idEnum"/>'s <paramref name="evt"/>
+        /// </summary>
+        public static void AddListener(Enum idEnum, PoolEventType evt, PoolAction target)
+            => Instance.ExecuteAddListener(idEnum.ToString(), evt, target);
+        
+
+        /// <summary>
         /// Adds a listener to <paramref name="id"/>'s <paramref name="evt"/>
         /// </summary>
         /// <param name="id">The poolable ID</param>
@@ -199,6 +206,12 @@ namespace BrightLib.Pooling.Runtime
         {
             Instance.ExecuteAddListener(id, evt, target);
         }
+
+        /// <summary>
+        /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
+        /// </summary>
+        public static void RemoveListener(Enum idEnum, PoolEventType evt, PoolAction target)
+            => Instance.ExecuteRemoveListener(idEnum.ToString(), evt, target);
 
         /// <summary>
         /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
