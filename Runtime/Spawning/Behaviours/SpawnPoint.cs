@@ -7,7 +7,6 @@ public class SpawnPoint : MonoBehaviour
 {
     private static GameObject _playerChar;
 
-
     private float _distanceToPlayer;
     private float _lastTimeUsed;
 
@@ -28,6 +27,8 @@ public class SpawnPoint : MonoBehaviour
 
     public float DistanceToPlayer { get => _distanceToPlayer;  }
     public float LastTimeUsed { get => _lastTimeUsed; set => _lastTimeUsed = value; }
+
+    public Vector3 Position { get => transform.position; }
 
     private void OnDrawGizmos()
     {

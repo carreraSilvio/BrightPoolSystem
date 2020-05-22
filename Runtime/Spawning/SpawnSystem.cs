@@ -25,6 +25,8 @@ namespace BrightLib.Pooling.Runtime
 
         #region Spawn (out Poolable)
 
+        public static bool Spawn(Enum idEnum, SpawnPointController spawnPointController, SpawnDistanceType spawnDistance, out Poolable poolable)
+            => Spawn(idEnum.ToString(), spawnPointController, spawnDistance, out poolable);
         public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
             => Spawn(idEnum.ToString(), spawnPoints, spawnDistance, out poolable);
         public static bool Spawn(Enum idEnum, Transform transform, out Poolable poolable)
@@ -32,10 +34,18 @@ namespace BrightLib.Pooling.Runtime
         public static bool Spawn(Enum idEnum, out Poolable poolable)
             => Instance.ExecuteSpawn(idEnum.ToString(), Vector3.zero, out poolable);
 
+        public static bool Spawn(string id, SpawnPointController spawnPointController, SpawnDistanceType spawnDistance, out Poolable poolable)
+        {
+            var spawnPoint = spawnPointController.FetchSpawnPoint(spawnDistance);
+            spawnPoint.MarkUse();
+            return Instance.ExecuteSpawn(id, spawnPoint.Position, out poolable);
+        }
+
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
-            var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
-            return Instance.ExecuteSpawn(id, position, out poolable);
+            var spawnPoint = SpawnerUtils.FetchSpawnPoint(spawnPoints, spawnDistance);
+            spawnPoint.MarkUse();
+            return Instance.ExecuteSpawn(id, spawnPoint.Position, out poolable);
         }
 
         public static bool Spawn(string enumId, Transform transform, out Poolable poolable)
@@ -47,7 +57,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if(!PoolSystem.FetchAvailable(id, out GameObject gameObject))
             {
-                poolable = default;
+                poolable = null;
                 return false;
             }
 
@@ -70,8 +80,9 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
-            var position = SpawnerUtils.FetchSpawnPointPosition(spawnPoints, spawnDistance);
-            return Instance.ExecuteSpawn(id, position);
+            var spawnPoint = SpawnerUtils.FetchSpawnPoint(spawnPoints, spawnDistance);
+            spawnPoint.MarkUse();
+            return Instance.ExecuteSpawn(id, spawnPoint.Position);
         }
 
         public static bool Spawn(string id, Transform transform)

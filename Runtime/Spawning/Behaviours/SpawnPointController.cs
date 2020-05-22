@@ -2,7 +2,6 @@
 
 namespace BrightLib.Pooling.Runtime
 {
-
     /// <summary>
     /// Controls more than one SpawnPoint. Easy entry point to fetch lastUsed or closest/fartest to player
     /// </summary>
@@ -10,7 +9,8 @@ namespace BrightLib.Pooling.Runtime
     {
         [SerializeField]
         private SpawnPoint[] _spawnPoints = default;
-        private int _lastPointIndex;
+
+        private int _lastIndexUsed;
 
         void Reset()
         {
@@ -22,56 +22,39 @@ namespace BrightLib.Pooling.Runtime
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
-        public SpawnPoint FetchSpawnPoint(int index)
+        public SpawnPoint FetchSpawnPoint(SpawnDistanceType spawnDistanceType)
         {
-            if (Total == -1) return null;
-
-            return _spawnPoints[index > Total ? 0 : index];
-        }
-
-        public SpawnPoint FetchFarSpawnPoint(bool useUnique = true)
-        {
-            var targetIndex = 0;
-            var distance = 0f;
-
-            for (int i = 0; i < _spawnPoints.Length; i++)
+            if(spawnDistanceType == SpawnDistanceType.Far)
             {
-                if (useUnique && i == _lastPointIndex) continue;
-
-                var sp = _spawnPoints[i];
-                if (sp.DistanceToPlayer > distance)
-                {
-                    distance = sp.DistanceToPlayer;
-                    targetIndex = i;
-                }
+                return FetchFarthestSpawnPoint();
+            }
+            else if(spawnDistanceType == SpawnDistanceType.Random)
+            {
+                return FetchRandomSpawnPoint();
             }
 
-            _lastPointIndex = targetIndex;
-            return _spawnPoints[targetIndex];
+            return FetchClosestSpawnPoint();
         }
 
-        public SpawnPoint FetchCloseSpawnPoint(bool useUnique = true)
+        public SpawnPoint FetchFarthestSpawnPoint()
         {
-            var targetIndex = 0;
-            var distance = 1000f;
-
-            for (int i = 0; i < _spawnPoints.Length; i++)
-            {
-                var spawnPoint = _spawnPoints[i];
-                if (spawnPoint.DistanceToPlayer < distance)
-                {
-                    distance = spawnPoint.DistanceToPlayer;
-                    targetIndex = i;
-                }
-            }
-
-            _lastPointIndex = targetIndex;
-            return _spawnPoints[targetIndex];
+            var spawnPointIndex = SpawnerUtils.FetchFarthestSpawnPoint(_spawnPoints, _lastIndexUsed);
+            _lastIndexUsed = spawnPointIndex;
+            return _spawnPoints[spawnPointIndex];
         }
 
-        public bool IsSpawnPointValid(int index)
+        public SpawnPoint FetchClosestSpawnPoint()
         {
-            return index <= _spawnPoints.Length && index >= 0;
+            var spawnPointIndex = SpawnerUtils.FetchClosestSpawnPoint(_spawnPoints, _lastIndexUsed);
+            _lastIndexUsed = spawnPointIndex;
+            return _spawnPoints[spawnPointIndex];
+        }
+
+        public SpawnPoint FetchRandomSpawnPoint()
+        {
+            var spawnPointIndex = SpawnerUtils.FetchRandomSpawnPoint(_spawnPoints);
+            _lastIndexUsed = spawnPointIndex;
+            return _spawnPoints[spawnPointIndex];
         }
 
         public int Total
