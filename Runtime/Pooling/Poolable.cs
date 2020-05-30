@@ -10,6 +10,11 @@ namespace BrightLib.Pooling.Runtime
         public bool Aquired { get => _aquired;}
 
         /// <summary>
+        /// Fired by the object once it has been aquired successfuly
+        /// </summary>
+        public event Action<GameObject> onAquire;
+
+        /// <summary>
         /// Fired by the object once it has finished it's use and it becomes available for the pool
         /// </summary>
         public event Action<GameObject> onRelease;
@@ -21,6 +26,7 @@ namespace BrightLib.Pooling.Runtime
         {
             _aquired = true;
             gameObject.SetActive(true);
+            onAquire.Invoke(gameObject);
             OnAquire();
         }
 
