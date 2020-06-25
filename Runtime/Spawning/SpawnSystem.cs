@@ -57,7 +57,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if(!PoolSystem.FetchAvailable(id, out GameObject gameObject))
             {
-                poolable = null;
+                poolable = default;
                 return false;
             }
 

@@ -5,8 +5,8 @@ namespace BrightLib.Pooling.Runtime
 {
     public class Pool
     {
-        public PoolAction onPoolableAquire;
-        public PoolAction onPoolableRelease;
+        public event PoolAction onPoolableAquire;
+        public event PoolAction onPoolableRelease;
 
         private GameObject _localRoot;
 
