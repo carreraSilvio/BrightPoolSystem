@@ -6,8 +6,8 @@ Creates and manages access to your pools.
 ## Features
 * Create pools when it's best for your project.
 * Avoid garbage collection kicking in by resuing objects.
-* Use Aquire and Release methods as ways your "Instatiate" and "Destroy" objects.
-* Listen to event callbacks so you can wire other systems when objects are aquired and released.
+* Use Aquire and Release methods as ways your "Instantiate" and "Destroy" objects.
+* Use events to notify other systems when objects are aquired and released.
 
 ## Prerequisites
 Unity 2018.3 and up
