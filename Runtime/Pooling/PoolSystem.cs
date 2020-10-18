@@ -15,7 +15,7 @@ namespace BrightLib.Pooling.Runtime
     /// <summary>
     /// Creates and maintains all the pools available
     /// </summary>
-    public class PoolSystem
+    public sealed class PoolSystem
     {
         private Dictionary<string, Pool> _pools;
         private PoolTracker _poolTracker;
@@ -98,8 +98,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            pool.FetchAvailable(out gameObject);
-            return true;
+            return pool.FetchAvailable(out gameObject);
         }
 
         private bool ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
@@ -111,8 +110,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            pool.FetchAvailable(out component);
-            return true;
+            return pool.FetchAvailable(out component);
         }
 
         #endregion
@@ -124,7 +122,7 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         public static bool HasAvailable(Enum enumId)
             => HasAvailable(enumId.ToString());
-        
+
         /// <summary>
         /// Returns true if there's an object available
         /// </summary>
@@ -144,9 +142,9 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
-        public static bool HasPool(Enum enumId) 
+        public static bool HasPool(Enum enumId)
             => HasPool(enumId.ToString());
-        
+
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
@@ -194,7 +192,7 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         public static void AddListener(Enum idEnum, PoolEventType evt, PoolAction target)
             => Instance.ExecuteAddListener(idEnum.ToString(), evt, target);
-        
+
 
         /// <summary>
         /// Adds a listener to <paramref name="id"/>'s <paramref name="evt"/>
