@@ -1,6 +1,6 @@
 ﻿namespace BrightLib.Pooling.Runtime
 {
-    public enum SpawnDistanceType 
+    public enum SpawnDistanceType
     {
         Manual,  //Default. Will use the SpawnPoint you pass
         Far,     //Will pick the SpawnPoint closest to the player

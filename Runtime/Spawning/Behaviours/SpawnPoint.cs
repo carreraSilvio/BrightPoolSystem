@@ -12,7 +12,7 @@ public class SpawnPoint : MonoBehaviour
 
     void OnEnable()
     {
-        if(_playerChar == null) _playerChar = GameObject.FindGameObjectWithTag("Player");
+        if (_playerChar == null) _playerChar = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
@@ -25,7 +25,7 @@ public class SpawnPoint : MonoBehaviour
         _lastTimeUsed = Time.time;
     }
 
-    public float DistanceToPlayer { get => _distanceToPlayer;  }
+    public float DistanceToPlayer { get => _distanceToPlayer; }
     public float LastTimeUsed { get => _lastTimeUsed; set => _lastTimeUsed = value; }
 
     public Vector3 Position { get => transform.position; }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
-{ 
+{
     /// <summary>
     /// Creates the pools definide by the config array
     /// </summary>

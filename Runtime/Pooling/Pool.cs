@@ -18,8 +18,8 @@ namespace BrightLib.Pooling.Runtime
 
         public Pool(GameObject prefab, int size, GameObject localRoot)
               : this(prefab.name, prefab, size, localRoot)
-        { 
-            
+        {
+
         }
 
         public Pool(string id, GameObject prefab, int size, GameObject localRoot)
@@ -42,7 +42,7 @@ namespace BrightLib.Pooling.Runtime
 
         private void Create(GameObject prefab, int amount = 10)
         {
-            for(int index = 0; index < amount; index++)
+            for (int index = 0; index < amount; index++)
             {
                 var entry = Object.Instantiate(prefab);
                 entry.transform.SetParent(_localRoot.transform);
@@ -73,9 +73,9 @@ namespace BrightLib.Pooling.Runtime
             return true;
         }
 
-        public bool FetchAvailable<T>(out T component) where T : MonoBehaviour 
+        public bool FetchAvailable<T>(out T component) where T : MonoBehaviour
         {
-            if(!HasAvailable())
+            if (!HasAvailable())
             {
                 component = default;
                 return false;
@@ -95,7 +95,7 @@ namespace BrightLib.Pooling.Runtime
             foreach (var entry in _entries)
             {
                 var poolable = entry.GetComponent<Poolable>();
-                if(poolable.Aquired) poolable.Release();
+                if (poolable.Aquired) poolable.Release();
             }
         }
 
@@ -113,6 +113,6 @@ namespace BrightLib.Pooling.Runtime
         public GameObject[] Entries { get => _entries; }
         public int TotalAquired { get => _entries.Length - _available.Count; }
         public GameObject LocalRoot { get => _localRoot; }
-        public GameObject Prefab { get => _prefab;}
+        public GameObject Prefab { get => _prefab; }
     }
 }

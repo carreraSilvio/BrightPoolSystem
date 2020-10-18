@@ -18,7 +18,7 @@ namespace BrightLib.Pooling.Runtime
         void Reset()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
-            if(_spawnPoints.Length == 0)
+            if (_spawnPoints.Length == 0)
             {
                 var go = new GameObject
                 {
@@ -28,7 +28,7 @@ namespace BrightLib.Pooling.Runtime
                 go.AddComponent<SpawnPoint>();
                 _spawnPoints = GetComponentsInChildren<SpawnPoint>();
             }
-            
+
         }
 
         void Awake()
@@ -79,7 +79,7 @@ namespace BrightLib.Pooling.Runtime
             return targetSpawnPoint.transform.position;
         }
 
-        
+
     }
 
 }

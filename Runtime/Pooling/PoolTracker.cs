@@ -16,7 +16,7 @@ namespace BrightLib.Pooling.Runtime
 
         public GameObject FindMainRoot()
         {
-            if(_mainRoot == null)
+            if (_mainRoot == null)
             {
                 _mainRoot = GameObject.Find(_kMainRootName);
                 if (_mainRoot == null)

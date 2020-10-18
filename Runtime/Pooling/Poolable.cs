@@ -7,7 +7,7 @@ namespace BrightLib.Pooling.Runtime
     {
         private bool _aquired;
 
-        public bool Aquired { get => _aquired;}
+        public bool Aquired { get => _aquired; }
 
         /// <summary>
         /// Fired by the object once it has been aquired successfuly

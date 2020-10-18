@@ -55,7 +55,7 @@ namespace BrightLib.Pooling.Runtime
 
         private bool ExecuteSpawn(string id, Vector3 position, out Poolable poolable)
         {
-            if(!PoolSystem.FetchAvailable(id, out GameObject gameObject))
+            if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
             {
                 poolable = default;
                 return false;
@@ -70,7 +70,7 @@ namespace BrightLib.Pooling.Runtime
         #endregion
 
         #region Spawn (NO out poolable)
-        
+
         public static bool Spawn(Enum idEnum, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
             => Spawn(idEnum.ToString(), spawnPoints, spawnDistance);
         public static bool Spawn(Enum idEnum, Transform transform)

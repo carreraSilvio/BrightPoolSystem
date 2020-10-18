@@ -24,11 +24,11 @@ namespace BrightLib.Pooling.Runtime
 
         public SpawnPoint FetchSpawnPoint(SpawnDistanceType spawnDistanceType)
         {
-            if(spawnDistanceType == SpawnDistanceType.Far)
+            if (spawnDistanceType == SpawnDistanceType.Far)
             {
                 return FetchFarthestSpawnPoint();
             }
-            else if(spawnDistanceType == SpawnDistanceType.Random)
+            else if (spawnDistanceType == SpawnDistanceType.Random)
             {
                 return FetchRandomSpawnPoint();
             }
@@ -62,7 +62,7 @@ namespace BrightLib.Pooling.Runtime
             get { return _spawnPoints != null ? _spawnPoints.Length : -1; }
         }
 
-        public SpawnPoint[] SpawnPoints  => _spawnPoints;
+        public SpawnPoint[] SpawnPoints => _spawnPoints;
 
         void OnDrawGizmosSelected()
         {
