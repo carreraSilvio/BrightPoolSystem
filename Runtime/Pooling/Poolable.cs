@@ -26,7 +26,7 @@ namespace BrightLib.Pooling.Runtime
         {
             _aquired = true;
             gameObject.SetActive(true);
-            onAquire.Invoke(gameObject);
+            onAquire?.Invoke(gameObject);
             OnAquire();
         }
 
