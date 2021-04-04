@@ -33,7 +33,7 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Called after the object is Aquired.
         /// </summary>
-        internal virtual void OnAquire()
+        protected virtual void OnAquire()
         {
 
         }
@@ -41,7 +41,7 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Called after the object is Released.
         /// </summary>
-        internal virtual void OnRelease()
+        protected virtual void OnRelease()
         {
 
         }
