@@ -106,6 +106,7 @@ namespace BrightLib.Pooling.Runtime
 
         private void HandlePoolableRelease(GameObject go)
         {
+            go.transform.SetParent(_localRoot.transform);
             _available.Enqueue(go);
             onPoolableRelease?.Invoke(_id, _entries.Length, TotalAquired);
         }
