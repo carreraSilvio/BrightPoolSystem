@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/carreraSilvio/BrightPoolSystem/blob/master/LICENSE.md)
+
 # Bright Pool System
 Creates and manages access to your pools. 
 
