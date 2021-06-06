@@ -29,13 +29,13 @@ namespace BrightLib.Pooling.Samples.CubeSample
             //Debug.Log($"{name} OnDisable");
         }
 
-        public override void OnAquire()
+        protected override void OnAcquire()
         {
-            Debug.Log($"{name} OnAquire");
+            Debug.Log($"{name} OnAcquire");
             _timeBorn = Time.time;
         }
 
-        public override void OnRelease()
+        protected override void OnRelease()
         {
             Debug.Log($"{name} OnRelease");
         }
