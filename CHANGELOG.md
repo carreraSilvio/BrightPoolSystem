@@ -1,4 +1,4 @@
-## [1.2.0] - 2020-03-27
+## [1.2.0] - 2021-06-06
 
 ### New
 * Removed internal PoolTracker class to reduce complexity
@@ -7,7 +7,7 @@
 * Typo in Aquire
 * Updated method description
 
-## [1.1.0] - 2020-03-27
+## [1.1.0] - 2021-04-04
 
 ### Fixes
 * Added null check for onAquire event
