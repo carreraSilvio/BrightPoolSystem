@@ -43,14 +43,16 @@ namespace BrightLib.Pooling.Runtime
         {
             _pools = new Dictionary<string, Pool>();
             CreateMainRoot();
-        } 
+        }
         #endregion
 
         #region CreatePool
 
         /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
         public static void CreatePool(string id, GameObject prefab, int size = 10)
-            => Instance.ExecuteCreatePool(id, prefab, size);
+        {
+            Instance.ExecuteCreatePool(id, prefab, size);
+        }
 
         /// <summary>
         /// Create a new pool and add it to list
@@ -66,12 +68,15 @@ namespace BrightLib.Pooling.Runtime
 
         #region Peek
 
+        /// <inheritdoc cref="ExecutePeek(string)"/>
+        public static GameObject[] Peek(Enum enumId)
+        {
+            return Instance.ExecutePeek(enumId.ToString());
+        }
+
         /// <summary>
         /// Returns all members of a given pool
         /// </summary>
-        public static GameObject[] Peek(Enum enumId)
-            => Instance.ExecutePeek(enumId.ToString());
-
         private GameObject[] ExecutePeek(string id)
         {
             var entries = _pools[id].Entries;
@@ -82,18 +87,21 @@ namespace BrightLib.Pooling.Runtime
 
         #region FetchAvailable
 
+        /// <inheritdoc cref="ExecuteFetchAvailable(string, out GameObject)"/>
+        public static bool FetchAvailable(string id, out GameObject gameObject)
+        {
+            return Instance.ExecuteFetchAvailable(id, out gameObject);
+        }
+
+        /// <inheritdoc cref="ExecuteFetchAvailable{T}(string, out T)"/>
+        public static bool FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
+        {
+            return Instance.ExecuteFetchAvailable<T>(id, out component);
+        }
+
         /// <summary>
         /// Searches for an available object and if it finds one and returns it.
         /// </summary>
-        public static bool FetchAvailable(string id, out GameObject gameObject)
-            => Instance.ExecuteFetchAvailable(id, out gameObject);
-
-        /// <summary>
-        /// Searches for an available object and if it finds oneand returns.
-        /// </summary>
-        public static bool FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
-            => Instance.ExecuteFetchAvailable<T>(id, out component);
-
         private bool ExecuteFetchAvailable(string id, out GameObject gameObject)
         {
             if (!_pools.ContainsKey(id))
@@ -106,6 +114,9 @@ namespace BrightLib.Pooling.Runtime
             return pool.FetchAvailable(out gameObject);
         }
 
+        /// <summary>
+        /// Searches for an available object and if it finds oneand returns.
+        /// </summary>
         private bool ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
         {
             if (!_pools.ContainsKey(id))
@@ -122,17 +133,21 @@ namespace BrightLib.Pooling.Runtime
 
         #region HasAvailable
 
-        /// <summary>
-        /// Returns true if there's an object available
-        /// </summary>
+        /// <inheritdoc cref="ExecuteHasAvailable(string)"/>
         public static bool HasAvailable(Enum enumId)
-            => HasAvailable(enumId.ToString());
+        {
+            return Instance.ExecuteHasAvailable(enumId.ToString());
+        }
+
+        /// <inheritdoc cref="ExecuteHasAvailable(string)"/>
+        public static bool HasAvailable(string id)
+        {
+            return Instance.ExecuteHasAvailable(id);
+        }
 
         /// <summary>
         /// Returns true if there's an object available
         /// </summary>
-        public static bool HasAvailable(string id)
-            => Instance.ExecuteHasAvailable(id);
         private bool ExecuteHasAvailable(string id)
         {
             if (!_pools.ContainsKey(id)) return false;
@@ -144,18 +159,21 @@ namespace BrightLib.Pooling.Runtime
 
         #region HasPool
 
-        /// <summary>
-        /// Returns true if there's a pool of the given id
-        /// </summary>
+        /// <inheritdoc cref="ExecuteHasPool(string)"/>
         public static bool HasPool(Enum enumId)
-            => HasPool(enumId.ToString());
+        {
+            return Instance.ExecuteHasPool(enumId.ToString());
+        }
+
+        /// <inheritdoc cref="ExecuteHasPool(string)"/>
+        public static bool HasPool(string id)
+        {
+            return Instance.ExecuteHasPool(id);
+        }
 
         /// <summary>
         /// Returns true if there's a pool of the given id
         /// </summary>
-        public static bool HasPool(string id)
-            => Instance.ExecuteHasPool(id);
-
         private bool ExecuteHasPool(string id)
         {
             return _pools.ContainsKey(id);
@@ -167,11 +185,15 @@ namespace BrightLib.Pooling.Runtime
 
         /// <inheritdoc cref="ExecuteTotalAcquired(string)"/>
         public static int TotalAcquired(Enum enumId)
-            => Instance.ExecuteTotalAcquired(enumId.ToString());
+        {
+            return Instance.ExecuteTotalAcquired(enumId.ToString());
+        }
 
         /// <inheritdoc cref="ExecuteTotalAcquired(string)"/>
         public static int TotalAcquired(string id)
-            => Instance.ExecuteTotalAcquired(id);
+        {
+            return Instance.ExecuteTotalAcquired(id);
+        }
 
         /// <summary>
         /// Returns the total of objects in the given pool that are aquired
@@ -191,12 +213,29 @@ namespace BrightLib.Pooling.Runtime
 
         #region Event Access
 
-        /// <summary>
-        /// Adds a listener to <paramref name="idEnum"/>'s <paramref name="evt"/>
-        /// </summary>
+        /// <inheritdoc cref="ExecuteAddListener(string, PoolEventType, PoolAction)"/>
         public static void AddListener(Enum idEnum, PoolEventType evt, PoolAction target)
-            => Instance.ExecuteAddListener(idEnum.ToString(), evt, target);
+        {
+            Instance.ExecuteAddListener(idEnum.ToString(), evt, target);
+        }
 
+        /// <inheritdoc cref="ExecuteAddListener(string, PoolEventType, PoolAction)"/>
+        public static void AddListener(string id, PoolEventType evt, PoolAction target)
+        {
+            Instance.ExecuteAddListener(id, evt, target);
+        }
+
+        /// <inheritdoc cref="ExecuteRemoveListener(string, PoolEventType, PoolAction)"/>
+        public static void RemoveListener(Enum idEnum, PoolEventType evt, PoolAction target)
+        {
+            Instance.ExecuteRemoveListener(idEnum.ToString(), evt, target);
+        }
+
+        /// <inheritdoc cref="ExecuteRemoveListener(string, PoolEventType, PoolAction)"/>
+        public static void RemoveListener(string id, PoolEventType evt, PoolAction target)
+        {
+            Instance.ExecuteRemoveListener(id, evt, target);
+        }
 
         /// <summary>
         /// Adds a listener to <paramref name="id"/>'s <paramref name="evt"/>
@@ -204,28 +243,6 @@ namespace BrightLib.Pooling.Runtime
         /// <param name="id">The poolable ID</param>
         /// <param name="evt">The event type</param>
         /// <param name="target">The callback method to be added</param>
-        public static void AddListener(string id, PoolEventType evt, PoolAction target)
-        {
-            Instance.ExecuteAddListener(id, evt, target);
-        }
-
-        /// <summary>
-        /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
-        /// </summary>
-        public static void RemoveListener(Enum idEnum, PoolEventType evt, PoolAction target)
-            => Instance.ExecuteRemoveListener(idEnum.ToString(), evt, target);
-
-        /// <summary>
-        /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
-        /// </summary>
-        /// <param name="id">The poolable ID</param>
-        /// <param name="evt">The event type</param>
-        /// <param name="target">The callback method to be removed</param>
-        public static void RemoveListener(string id, PoolEventType evt, PoolAction target)
-        {
-            Instance.ExecuteRemoveListener(id, evt, target);
-        }
-
         private void ExecuteAddListener(string id, PoolEventType evt, PoolAction target)
         {
             if (!_pools.ContainsKey(id))
@@ -239,6 +256,12 @@ namespace BrightLib.Pooling.Runtime
             else pool.onPoolableRelease += target;
         }
 
+        /// <summary>
+        /// Removes a listener of <paramref name="id"/>'s <paramref name="evt"/>
+        /// </summary>
+        /// <param name="id">The poolable ID</param>
+        /// <param name="evt">The event type</param>
+        /// <param name="target">The callback method to be removed</param>
         private void ExecuteRemoveListener(string id, PoolEventType evt, PoolAction target)
         {
             if (!_pools.ContainsKey(id))
@@ -256,12 +279,14 @@ namespace BrightLib.Pooling.Runtime
 
         #region ReleaseAll
 
-        /// <summary>
-        /// Go through each pool releasing all acquired objects
-        /// </summary>
+        /// <inheritdoc cref="ExecuteReleaseAll"/>
         public static void ReleaseAll()
             => Instance.ExecuteReleaseAll();
 
+
+        /// <summary>
+        /// Go through each pool releasing all acquired objects
+        /// </summary>
         private void ExecuteReleaseAll()
         {
             foreach (var pool in _pools.Values)
@@ -273,7 +298,7 @@ namespace BrightLib.Pooling.Runtime
         #endregion
 
 
-        #region Internal Methods
+        #region Private Helper Methods
 
         private void CreateMainRoot()
         {
