@@ -18,8 +18,12 @@ namespace BrightLib.Pooling.Runtime
     public sealed class PoolSystem
     {
         private readonly Dictionary<string, Pool> _pools;
-        private readonly PoolTracker _poolTracker;
 
+        private GameObject _mainRoot;
+        private static readonly string MAIN_ROOT_NAME = "Pools";
+        private static readonly string LOCAL_ROOT_SUFFIX = "Pool";
+
+        #region Singleton
         private static PoolSystem _instance;
 
         private static PoolSystem Instance
@@ -38,21 +42,22 @@ namespace BrightLib.Pooling.Runtime
         private PoolSystem()
         {
             _pools = new Dictionary<string, Pool>();
-            _poolTracker = new PoolTracker();
-            _poolTracker.FindMainRoot();
-        }
+            CreateMainRoot();
+        } 
+        #endregion
 
         #region CreatePool
+
+        /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
+        public static void CreatePool(string id, GameObject prefab, int size = 10)
+            => Instance.ExecuteCreatePool(id, prefab, size);
 
         /// <summary>
         /// Create a new pool and add it to list
         /// </summary>
-        public static void CreatePool(string id, GameObject prefab, int size = 10)
-            => Instance.ExecuteCreatePool(id, prefab, size);
-
         private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
         {
-            var localRoot = _poolTracker.FindLocalRoot(id);
+            var localRoot = GetLocalRoot(id);
             var pool = new Pool(id, prefab, size, localRoot);
             _pools.Add(id, pool);
         }
@@ -266,5 +271,37 @@ namespace BrightLib.Pooling.Runtime
         }
 
         #endregion
+
+
+        #region Internal Methods
+
+        private void CreateMainRoot()
+        {
+            if (_mainRoot == null)
+            {
+                _mainRoot = GameObject.Find(MAIN_ROOT_NAME);
+                if (_mainRoot == null)
+                {
+                    _mainRoot = new GameObject(MAIN_ROOT_NAME);
+                    _mainRoot.transform.SetAsLastSibling();
+                }
+            }
+        }
+
+        private GameObject GetLocalRoot(string id)
+        {
+            var localRootName = $"{id}{LOCAL_ROOT_SUFFIX}";
+            var localRoot = _mainRoot.transform.Find(localRootName).gameObject;
+            if (localRoot == null)
+            {
+                localRoot = new GameObject(localRootName);
+                localRoot.transform.SetParent(_mainRoot.transform);
+            }
+
+            return localRoot;
+        }
+
+        #endregion
+
     }
 }
