@@ -5,7 +5,7 @@
     /// </summary>
     public enum PoolEventType
     {
-        OnAquire,
+        OnAcquire,
         OnRelease
     }
 }

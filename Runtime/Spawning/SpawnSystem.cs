@@ -21,7 +21,7 @@ namespace BrightLib.Pooling.Runtime
         }
 
         public static int TotalSpawned(string id)
-            => PoolSystem.TotalAquired(id);
+            => PoolSystem.TotalAcquired(id);
 
         #region Spawn (out Poolable)
 

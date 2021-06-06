@@ -5,14 +5,14 @@ namespace BrightLib.Pooling.Runtime
 {
     public class Poolable : MonoBehaviour
     {
-        private bool _aquired;
+        private bool _acquired;
 
-        public bool Aquired { get => _aquired; }
+        public bool Acquired { get => _acquired; }
 
         /// <summary>
         /// Fired by the object once it has been aquired successfuly
         /// </summary>
-        public event Action<GameObject> onAquire;
+        public event Action<GameObject> onAcquire;
 
         /// <summary>
         /// Fired by the object once it has finished it's use and it becomes available for the pool
@@ -20,20 +20,20 @@ namespace BrightLib.Pooling.Runtime
         public event Action<GameObject> onRelease;
 
         /// <summary>
-        /// Aquires the object from the pool.
+        /// Acquires the object from the pool.
         /// </summary>
-        internal void Aquire()
+        internal void Acquire()
         {
-            _aquired = true;
+            _acquired = true;
             gameObject.SetActive(true);
-            onAquire?.Invoke(gameObject);
-            OnAquire();
+            onAcquire?.Invoke(gameObject);
+            OnAcquire();
         }
 
         /// <summary>
-        /// Called after the object is Aquired.
+        /// Called after the object is Acquired.
         /// </summary>
-        protected virtual void OnAquire()
+        protected virtual void OnAcquire()
         {
 
         }
@@ -51,9 +51,9 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         public void Release()
         {
-            if (!_aquired) return;
+            if (!_acquired) return;
 
-            _aquired = false;
+            _acquired = false;
             gameObject.SetActive(false);
             onRelease?.Invoke(gameObject);
             OnRelease();

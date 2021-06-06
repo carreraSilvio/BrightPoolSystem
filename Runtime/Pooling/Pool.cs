@@ -5,7 +5,7 @@ namespace BrightLib.Pooling.Runtime
 {
     public class Pool
     {
-        public event PoolAction onPoolableAquire;
+        public event PoolAction onPoolableAcquire;
         public event PoolAction onPoolableRelease;
 
         private GameObject _localRoot;
@@ -66,8 +66,8 @@ namespace BrightLib.Pooling.Runtime
 
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
-            poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, TotalAquired);
+            poolable.Acquire();
+            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired);
 
             gameObject = entry;
             return true;
@@ -83,8 +83,8 @@ namespace BrightLib.Pooling.Runtime
 
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
-            poolable.Aquire();
-            onPoolableAquire?.Invoke(_id, _entries.Length, TotalAquired);
+            poolable.Acquire();
+            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired);
 
             component = entry.GetComponent<T>();
             return true;
@@ -95,7 +95,7 @@ namespace BrightLib.Pooling.Runtime
             foreach (var entry in _entries)
             {
                 var poolable = entry.GetComponent<Poolable>();
-                if (poolable.Aquired) poolable.Release();
+                if (poolable.Acquired) poolable.Release();
             }
         }
 
@@ -108,11 +108,11 @@ namespace BrightLib.Pooling.Runtime
         {
             go.transform.SetParent(_localRoot.transform);
             _available.Enqueue(go);
-            onPoolableRelease?.Invoke(_id, _entries.Length, TotalAquired);
+            onPoolableRelease?.Invoke(_id, _entries.Length, TotalAcquired);
         }
 
         public GameObject[] Entries { get => _entries; }
-        public int TotalAquired { get => _entries.Length - _available.Count; }
+        public int TotalAcquired { get => _entries.Length - _available.Count; }
         public GameObject LocalRoot { get => _localRoot; }
         public GameObject Prefab { get => _prefab; }
     }

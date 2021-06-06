@@ -17,8 +17,8 @@ namespace BrightLib.Pooling.Runtime
     /// </summary>
     public sealed class PoolSystem
     {
-        private Dictionary<string, Pool> _pools;
-        private PoolTracker _poolTracker;
+        private readonly Dictionary<string, Pool> _pools;
+        private readonly PoolTracker _poolTracker;
 
         private static PoolSystem _instance;
 
@@ -158,21 +158,20 @@ namespace BrightLib.Pooling.Runtime
 
         #endregion
 
-        #region TotalAquired
+        #region TotalAcquired
+
+        /// <inheritdoc cref="ExecuteTotalAcquired(string)"/>
+        public static int TotalAcquired(Enum enumId)
+            => Instance.ExecuteTotalAcquired(enumId.ToString());
+
+        /// <inheritdoc cref="ExecuteTotalAcquired(string)"/>
+        public static int TotalAcquired(string id)
+            => Instance.ExecuteTotalAcquired(id);
 
         /// <summary>
         /// Returns the total of objects in the given pool that are aquired
         /// </summary>
-        public static int TotalAquired(Enum enumId)
-            => TotalAquired(enumId.ToString());
-
-        /// <summary>
-        /// Returns the total of objects in the given pool that are aquired
-        /// </summary>
-        public static int TotalAquired(string id)
-            => Instance.ExecuteTotalAquired(id);
-
-        private int ExecuteTotalAquired(string id)
+        private int ExecuteTotalAcquired(string id)
         {
             if (!_pools.ContainsKey(id))
             {
@@ -180,7 +179,7 @@ namespace BrightLib.Pooling.Runtime
                 return -1;
             }
 
-            return _pools[id].TotalAquired;
+            return _pools[id].TotalAcquired;
         }
 
         #endregion
@@ -231,7 +230,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEventType.OnAquire) pool.onPoolableAquire += target;
+            if (evt == PoolEventType.OnAcquire) pool.onPoolableAcquire += target;
             else pool.onPoolableRelease += target;
         }
 
@@ -244,7 +243,7 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEventType.OnAquire) pool.onPoolableAquire -= target;
+            if (evt == PoolEventType.OnAcquire) pool.onPoolableAcquire -= target;
             else pool.onPoolableRelease -= target;
         }
 
