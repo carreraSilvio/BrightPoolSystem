@@ -316,7 +316,7 @@ namespace BrightLib.Pooling.Runtime
         private GameObject GetLocalRoot(string id)
         {
             var localRootName = $"{id}{LOCAL_ROOT_SUFFIX}";
-            var localRoot = _mainRoot.transform.Find(localRootName).gameObject;
+            var localRoot = _mainRoot.transform.Find(localRootName)?.gameObject;
             if (localRoot == null)
             {
                 localRoot = new GameObject(localRootName);
