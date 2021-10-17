@@ -1,4 +1,6 @@
-﻿namespace BrightLib.Pooling.Runtime
+﻿using System.Collections.Generic;
+
+namespace BrightLib.Pooling.Runtime
 {
     public static class SpawnerUtils
     {
@@ -7,11 +9,11 @@
             int targetIndex;
             if (spawnDistance == SpawnDistanceType.Far)
             {
-                targetIndex = FetchFarthestSpawnPoint(spawnPoints);
+                targetIndex = FetchFarthestSpawnPoint(spawnPoints, new List<int>());
             }
             else
             {
-                targetIndex = FetchClosestSpawnPoint(spawnPoints);
+                targetIndex = FetchClosestSpawnPoint(spawnPoints, new List<int>());
             }
 
             var targerSpawnPoint = spawnPoints[targetIndex];
@@ -22,20 +24,20 @@
         /// <summary>
         /// Returns the farthest spawnPoint fromn the player
         /// </summary>
-        public static int FetchFarthestSpawnPoint(SpawnPoint[] spawnPoints, int ignoreIndex = -1)
+        public static int FetchFarthestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
         {
             var targetIndex = 0;
             var distance = -1f;
 
-            for (int i = 0; i < spawnPoints.Length; i++)
+            for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
             {
-                if (i == ignoreIndex) continue;
+                if (ignoreIndex.Contains(spawnPointIndex)) continue;
 
-                var sp = spawnPoints[i];
+                var sp = spawnPoints[spawnPointIndex];
                 if (sp.DistanceToPlayer >= distance)
                 {
                     distance = sp.DistanceToPlayer;
-                    targetIndex = i;
+                    targetIndex = spawnPointIndex;
                 }
             }
 
@@ -45,20 +47,20 @@
         /// <summary>
         /// Returns the closest spawnPoint fromn the player
         /// </summary>
-        public static int FetchClosestSpawnPoint(SpawnPoint[] spawnPoints, int ignoreIndex = -1)
+        public static int FetchClosestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
         {
             var targetIndex = 0;
             var distance = 9999f;
 
-            for (int i = 0; i < spawnPoints.Length; i++)
+            for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
             {
-                if (i == ignoreIndex) continue;
+                if (ignoreIndex.Contains(spawnPointIndex)) continue;
 
-                var sp = spawnPoints[i];
+                var sp = spawnPoints[spawnPointIndex];
                 if (sp.DistanceToPlayer <= distance)
                 {
                     distance = sp.DistanceToPlayer;
-                    targetIndex = i;
+                    targetIndex = spawnPointIndex;
                 }
             }
 

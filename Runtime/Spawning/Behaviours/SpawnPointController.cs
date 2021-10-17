@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
@@ -10,7 +11,7 @@ namespace BrightLib.Pooling.Runtime
         [SerializeField]
         private SpawnPoint[] _spawnPoints = default;
 
-        private int _lastIndexUsed;
+        private List<int> _lastIndexUsedList = new List<int>();
 
         void Reset()
         {
@@ -38,22 +39,31 @@ namespace BrightLib.Pooling.Runtime
 
         public SpawnPoint FetchFarthestSpawnPoint()
         {
-            var spawnPointIndex = SpawnerUtils.FetchFarthestSpawnPoint(_spawnPoints, _lastIndexUsed);
-            _lastIndexUsed = spawnPointIndex;
+            if(_lastIndexUsedList.Count == _spawnPoints.Length)
+            {
+                _lastIndexUsedList.Clear();
+            }
+
+            var spawnPointIndex = SpawnerUtils.FetchFarthestSpawnPoint(_spawnPoints, _lastIndexUsedList);
+            _lastIndexUsedList.Add(spawnPointIndex);
             return _spawnPoints[spawnPointIndex];
         }
 
         public SpawnPoint FetchClosestSpawnPoint()
         {
-            var spawnPointIndex = SpawnerUtils.FetchClosestSpawnPoint(_spawnPoints, _lastIndexUsed);
-            _lastIndexUsed = spawnPointIndex;
+            if (_lastIndexUsedList.Count == _spawnPoints.Length)
+            {
+                _lastIndexUsedList.Clear();
+            }
+
+            var spawnPointIndex = SpawnerUtils.FetchClosestSpawnPoint(_spawnPoints, _lastIndexUsedList);
+            _lastIndexUsedList.Add(spawnPointIndex);
             return _spawnPoints[spawnPointIndex];
         }
 
         public SpawnPoint FetchRandomSpawnPoint()
         {
             var spawnPointIndex = SpawnerUtils.FetchRandomSpawnPoint(_spawnPoints);
-            _lastIndexUsed = spawnPointIndex;
             return _spawnPoints[spawnPointIndex];
         }
 
