@@ -23,6 +23,11 @@ namespace BrightLib.Pooling.Runtime
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
+        public void ClearIndexUsedList()
+        {
+            _lastIndexUsedList.Clear();
+        }
+
         public SpawnPoint FetchSpawnPoint(SpawnDistanceType spawnDistanceType)
         {
             if (spawnDistanceType == SpawnDistanceType.Far)
