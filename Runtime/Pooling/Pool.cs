@@ -46,7 +46,7 @@ namespace BrightLib.Pooling.Runtime
             {
                 var entry = Object.Instantiate(prefab);
                 entry.transform.SetParent(_localRoot.transform);
-                entry.name = prefab.name + index;
+                entry.name = prefab.name + "_" + index;
                 entry.SetActive(false);
 
                 var poolable = entry.GetComponentInChildren<Poolable>(true);
