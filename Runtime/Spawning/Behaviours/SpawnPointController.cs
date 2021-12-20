@@ -79,13 +79,18 @@ namespace BrightLib.Pooling.Runtime
 
         public SpawnPoint[] SpawnPoints => _spawnPoints;
 
-        void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             if (_spawnPoints == null) return;
 
             Gizmos.color = Color.yellow;
             foreach (var point in _spawnPoints)
             {
+#if UNITY_EDITOR
+                var midPoint = (transform.position + point.transform.position)/2;
+                UnityEditor.Handles.color = Color.white;
+                UnityEditor.Handles.Label(midPoint, $"{midPoint.magnitude:F2}");
+#endif
                 Gizmos.DrawLine(transform.position, point.transform.position);
             }
         }
