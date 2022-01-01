@@ -49,6 +49,12 @@ namespace BrightLib.Pooling.Runtime
         #region CreatePool
 
         /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
+        public static void CreatePool(Enum id, GameObject prefab, int size = 10)
+        {
+            Instance.ExecuteCreatePool(id.ToString(), prefab, size);
+        }
+
+        /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
         public static void CreatePool(string id, GameObject prefab, int size = 10)
         {
             Instance.ExecuteCreatePool(id, prefab, size);
