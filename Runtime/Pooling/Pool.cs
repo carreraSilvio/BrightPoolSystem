@@ -95,7 +95,10 @@ namespace BrightLib.Pooling.Runtime
             foreach (var entry in _entries)
             {
                 var poolable = entry.GetComponent<Poolable>();
-                if (poolable.Acquired) poolable.Release();
+                if (poolable.Acquired)
+                {
+                    poolable.Release();
+                }
             }
         }
 

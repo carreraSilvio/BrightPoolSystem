@@ -287,11 +287,12 @@ namespace BrightLib.Pooling.Runtime
 
         /// <inheritdoc cref="ExecuteReleaseAll"/>
         public static void ReleaseAll()
-            => Instance.ExecuteReleaseAll();
-
+        {
+            Instance.ExecuteReleaseAll();
+        }
 
         /// <summary>
-        /// Go through each pool releasing all acquired objects
+        /// Release all acquired objects from ALL pools
         /// </summary>
         private void ExecuteReleaseAll()
         {
@@ -299,6 +300,37 @@ namespace BrightLib.Pooling.Runtime
             {
                 pool.ReleaseAll();
             }
+        }
+
+        #endregion
+
+        #region ReleaseAll
+
+        /// <inheritdoc cref="ExecuteReleaseAllFromPool(string)"/>
+        public static void ReleaseAllFromPool(Enum enumId)
+        {
+            Instance.ExecuteReleaseAllFromPool(enumId.ToString());
+        }
+
+        /// <inheritdoc cref="ExecuteReleaseAllFromPool(string)"/>
+        public static void ReleaseAllFromPool(string id)
+        {
+            Instance.ExecuteReleaseAllFromPool(id);
+        }
+
+        /// <summary>
+        /// Release all acquired objects from a specific pool
+        /// </summary>
+        private void ExecuteReleaseAllFromPool(string id)
+        {
+            if(!HasPool(id))
+            {
+                return;
+            }
+
+            var pool = _pools[id];
+            pool.ReleaseAll();
+            
         }
 
         #endregion
