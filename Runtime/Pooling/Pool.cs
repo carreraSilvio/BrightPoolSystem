@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
@@ -7,6 +8,11 @@ namespace BrightLib.Pooling.Runtime
     {
         public event PoolAction onPoolableAcquire;
         public event PoolAction onPoolableRelease;
+
+        public GameObject[] Entries { get => _entries; }
+        public int TotalAcquired { get => _entries.Length - _available.Count; }
+        public GameObject LocalRoot { get => _localRoot; }
+        public GameObject Prefab { get => _prefab; }
 
         private GameObject _localRoot;
 
@@ -44,7 +50,7 @@ namespace BrightLib.Pooling.Runtime
         {
             for (int index = 0; index < amount; index++)
             {
-                var entry = Object.Instantiate(prefab);
+                var entry = GameObject.Instantiate(prefab);
                 entry.transform.SetParent(_localRoot.transform);
                 entry.name = prefab.name + "_" + index;
                 entry.SetActive(false);
@@ -67,7 +73,7 @@ namespace BrightLib.Pooling.Runtime
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
             poolable.Acquire();
-            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired);
+            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired, entry);
 
             gameObject = entry;
             return true;
@@ -84,7 +90,7 @@ namespace BrightLib.Pooling.Runtime
             var entry = _available.Dequeue();
             var poolable = entry.GetComponent<Poolable>();
             poolable.Acquire();
-            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired);
+            onPoolableAcquire?.Invoke(_id, _entries.Length, TotalAcquired, entry);
 
             component = entry.GetComponent<T>();
             return true;
@@ -111,12 +117,7 @@ namespace BrightLib.Pooling.Runtime
         {
             go.transform.SetParent(_localRoot.transform);
             _available.Enqueue(go);
-            onPoolableRelease?.Invoke(_id, _entries.Length, TotalAcquired);
+            onPoolableRelease?.Invoke(_id, _entries.Length, TotalAcquired, go);
         }
-
-        public GameObject[] Entries { get => _entries; }
-        public int TotalAcquired { get => _entries.Length - _available.Count; }
-        public GameObject LocalRoot { get => _localRoot; }
-        public GameObject Prefab { get => _prefab; }
     }
 }

@@ -10,7 +10,7 @@ namespace BrightLib.Pooling.Runtime
     /// <param name="id">The Id to the poolable object</param>
     /// <param name="poolSize">The total size of the pool</param>
     /// <param name="totalInUse">The amount of poolables currently in-use</param>
-    public delegate void PoolAction(string id, int poolSize, int totalInUse);
+    public delegate void PoolAction(string id, int poolSize, int totalInUse, GameObject entry);
 
     /// <summary>
     /// Creates and maintains all the pools available
@@ -156,7 +156,10 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         private bool ExecuteHasAvailable(string id)
         {
-            if (!_pools.ContainsKey(id)) return false;
+            if (!_pools.ContainsKey(id))
+            {
+                return false;
+            }
 
             return _pools[id].HasAvailable();
         }
@@ -258,8 +261,14 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEventType.OnAcquire) pool.onPoolableAcquire += target;
-            else pool.onPoolableRelease += target;
+            if (evt == PoolEventType.OnAcquire)
+            {
+                pool.onPoolableAcquire += target;
+            }
+            else
+            {
+                pool.onPoolableRelease += target;
+            }
         }
 
         /// <summary>
@@ -277,8 +286,14 @@ namespace BrightLib.Pooling.Runtime
             }
 
             var pool = _pools[id];
-            if (evt == PoolEventType.OnAcquire) pool.onPoolableAcquire -= target;
-            else pool.onPoolableRelease -= target;
+            if (evt == PoolEventType.OnAcquire)
+            {
+                pool.onPoolableAcquire -= target;
+            }
+            else
+            {
+                pool.onPoolableRelease -= target;
+            }
         }
 
         #endregion
