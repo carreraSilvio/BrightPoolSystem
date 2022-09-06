@@ -49,7 +49,7 @@ namespace BrightLib.Pooling.Runtime
                 _lastIndexUsedList.Clear();
             }
 
-            var spawnPointIndex = SpawnerUtils.FetchFarthestSpawnPoint(_spawnPoints, _lastIndexUsedList);
+            var spawnPointIndex = SpawnSystem.FetchFarthestSpawnPoint(_spawnPoints, _lastIndexUsedList);
             _lastIndexUsedList.Add(spawnPointIndex);
             return _spawnPoints[spawnPointIndex];
         }
@@ -61,14 +61,14 @@ namespace BrightLib.Pooling.Runtime
                 _lastIndexUsedList.Clear();
             }
 
-            var spawnPointIndex = SpawnerUtils.FetchClosestSpawnPoint(_spawnPoints, _lastIndexUsedList);
+            var spawnPointIndex = SpawnSystem.FetchClosestSpawnPoint(_spawnPoints, _lastIndexUsedList);
             _lastIndexUsedList.Add(spawnPointIndex);
             return _spawnPoints[spawnPointIndex];
         }
 
         public SpawnPoint FetchRandomSpawnPoint()
         {
-            var spawnPointIndex = SpawnerUtils.FetchRandomSpawnPoint(_spawnPoints);
+            var spawnPointIndex = SpawnSystem.FetchRandomSpawnPoint(_spawnPoints);
             return _spawnPoints[spawnPointIndex];
         }
 
