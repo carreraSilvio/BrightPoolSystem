@@ -146,11 +146,11 @@ namespace BrightLib.Pooling.Runtime
             int targetIndex;
             if (spawnDistance == SpawnDistanceType.Far)
             {
-                targetIndex = FetchFarthestSpawnPoint(spawnPoints, new List<int>());
+                targetIndex = GetFarthestSpawnPoint(spawnPoints, new List<int>());
             }
             else
             {
-                targetIndex = FetchClosestSpawnPoint(spawnPoints, new List<int>());
+                targetIndex = GetClosestSpawnPoint(spawnPoints, new List<int>());
             }
 
             var targerSpawnPoint = spawnPoints[targetIndex];
@@ -159,9 +159,9 @@ namespace BrightLib.Pooling.Runtime
         }
 
         /// <summary>
-        /// Returns the farthest spawnPoint fromn the player
+        /// Get the farthest spawnPoint from the player
         /// </summary>
-        public static int FetchFarthestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
+        public static int GetFarthestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
         {
             var targetIndex = 0;
             var distance = -1f;
@@ -185,9 +185,9 @@ namespace BrightLib.Pooling.Runtime
         }
 
         /// <summary>
-        /// Returns the closest spawnPoint fromn the player
+        /// Get the closest spawnPoint fromn the player
         /// </summary>
-        public static int FetchClosestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
+        public static int GetClosestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
         {
             var targetIndex = 0;
             var distance = 9999f;
@@ -211,9 +211,9 @@ namespace BrightLib.Pooling.Runtime
         }
 
         /// <summary>
-        /// Returns a random spawn point
+        /// Get a random spawn point
         /// </summary>
-        public static int FetchRandomSpawnPoint(SpawnPoint[] spawnPoints)
+        public static int GetRandomSpawnPoint(SpawnPoint[] spawnPoints)
         {
             var targetIndex = UnityEngine.Random.Range(0, spawnPoints.Length - 1);
 

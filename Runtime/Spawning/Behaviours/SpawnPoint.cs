@@ -40,12 +40,15 @@ namespace BrightLib.Pooling.Runtime
             }
         }
 
-        #region Debug
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, 0.2f);
+            Gizmos.DrawWireSphere(transform.position, 1f);
+            UnityEditor.Handles.color = Color.white;
+            UnityEditor.Handles.Label(transform.position, $"{name}");
         }
-        #endregion
+#endif
+
     }
 }
