@@ -30,7 +30,7 @@ namespace BrightLib.Pooling.Runtime
             _lastIndexUsedList.Clear();
         }
 
-        public SpawnPoint FetchSpawnPoint(SpawnDistanceType spawnDistanceType)
+        public SpawnPoint GetSpawnPoint(SpawnDistanceType spawnDistanceType)
         {
             if (spawnDistanceType == SpawnDistanceType.Far)
             {

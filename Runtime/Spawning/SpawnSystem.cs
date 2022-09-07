@@ -50,7 +50,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool Spawn(string id, SpawnPointController spawnPointController, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
-            var spawnPoint = spawnPointController.FetchSpawnPoint(spawnDistance);
+            var spawnPoint = spawnPointController.GetSpawnPoint(spawnDistance);
             spawnPoint.MarkUse();
             return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
         }
