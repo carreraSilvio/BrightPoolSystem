@@ -4,21 +4,21 @@ using UnityEngine;
 namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
-    /// Controls more than one SpawnPoint. Easy entry point to fetch lastUsed or closest/fartest to player
+    /// Responsible for controlling multiple spawn points
     /// </summary>
-    public class SpawnPointController : MonoBehaviour
+    public sealed class SpawnPointController : MonoBehaviour
     {
         [SerializeField]
         private SpawnPoint[] _spawnPoints = default;
 
-        private List<int> _lastIndexUsedList = new List<int>();
+        private readonly List<int> _lastIndexUsedList = new List<int>();
 
-        void Reset()
+        private void Reset()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
-        void Awake()
+        private void Awake()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }

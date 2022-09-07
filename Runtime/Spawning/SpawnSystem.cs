@@ -4,8 +4,18 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
+    /// <summary>
+    /// Responsible for knowing how to spawn poolables out of the <see cref="PoolSystem"/>
+    /// </summary>
     public sealed class SpawnSystem
     {
+        private SpawnSystem() { }
+
+        public static int TotalSpawned(Enum id)
+        {
+            return PoolSystem.TotalAcquired(id);
+        }
+
         public static int TotalSpawned(string id)
         {
             return PoolSystem.TotalAcquired(id);
@@ -42,14 +52,14 @@ namespace BrightLib.Pooling.Runtime
         {
             var spawnPoint = spawnPointController.FetchSpawnPoint(spawnDistance);
             spawnPoint.MarkUse();
-            return ExecuteSpawn(id, spawnPoint.Position, out poolable);
+            return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
         }
 
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
             var spawnPoint = GetSpawnPoint(spawnPoints, spawnDistance);
             spawnPoint.MarkUse();
-            return ExecuteSpawn(id, spawnPoint.Position, out poolable);
+            return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
         }
 
         public static bool Spawn(string enumId, Transform transform, out Poolable poolable)
@@ -105,7 +115,7 @@ namespace BrightLib.Pooling.Runtime
         {
             var spawnPoint = GetSpawnPoint(spawnPoints, spawnDistance);
             spawnPoint.MarkUse();
-            return ExecuteSpawn(id, spawnPoint.Position);
+            return ExecuteSpawn(id, spawnPoint.transform.position);
         }
 
         public static bool Spawn(string id, Transform transform)
@@ -158,12 +168,15 @@ namespace BrightLib.Pooling.Runtime
 
             for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
             {
-                if (ignoreIndex.Contains(spawnPointIndex)) continue;
-
-                var sp = spawnPoints[spawnPointIndex];
-                if (sp.DistanceToPlayer >= distance)
+                if (ignoreIndex.Contains(spawnPointIndex))
                 {
-                    distance = sp.DistanceToPlayer;
+                    continue;
+                }
+
+                var spawnPoint = spawnPoints[spawnPointIndex];
+                if (spawnPoint.DistanceToPlayer >= distance)
+                {
+                    distance = spawnPoint.DistanceToPlayer;
                     targetIndex = spawnPointIndex;
                 }
             }
@@ -181,12 +194,15 @@ namespace BrightLib.Pooling.Runtime
 
             for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
             {
-                if (ignoreIndex.Contains(spawnPointIndex)) continue;
-
-                var sp = spawnPoints[spawnPointIndex];
-                if (sp.DistanceToPlayer <= distance)
+                if (ignoreIndex.Contains(spawnPointIndex))
                 {
-                    distance = sp.DistanceToPlayer;
+                    continue;
+                }
+
+                var spawnPoint = spawnPoints[spawnPointIndex];
+                if (spawnPoint.DistanceToPlayer <= distance)
+                {
+                    distance = spawnPoint.DistanceToPlayer;
                     targetIndex = spawnPointIndex;
                 }
             }
