@@ -27,14 +27,14 @@ namespace BrightLib.Pooling.Runtime
             LastTimeUsed = Time.time;
         }
 
-        private void ValidatePlayerReference()
+        private static void ValidatePlayerReference()
         {
             if (_player == null)
             {
                 _player = GameObject.FindGameObjectWithTag("Player");
                 if (_player == null)
                 {
-                    _player = gameObject;
+                    _player = new GameObject("Fake Player");
                     Debug.LogError("Player not found. Using another transform to avoid null refs");
                 }
             }

@@ -8,6 +8,8 @@ namespace BrightLib.Pooling.Runtime
     /// </summary>
     public sealed class SpawnPointController : MonoBehaviour
     {
+        public SpawnPoint[] SpawnPoints => _spawnPoints;
+
         [SerializeField]
         private SpawnPoint[] _spawnPoints = default;
 
@@ -71,13 +73,6 @@ namespace BrightLib.Pooling.Runtime
             var spawnPointIndex = SpawnSystem.FetchRandomSpawnPoint(_spawnPoints);
             return _spawnPoints[spawnPointIndex];
         }
-
-        public int Total
-        {
-            get { return _spawnPoints != null ? _spawnPoints.Length : -1; }
-        }
-
-        public SpawnPoint[] SpawnPoints => _spawnPoints;
 
      
     }
