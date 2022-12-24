@@ -89,6 +89,33 @@ namespace BrightLib.Pooling.Runtime
             return entries;
         }
 
+        /// <inheritdoc cref="ExecuteGetGameObjectsWithTag(string)"/>
+        public static GameObject[] GetGameObjectsAllWithTag(string tag)
+        {
+            return Instance.ExecuteGetGameObjectsWithTag(tag);
+        }
+
+        /// <summary>
+        /// Returns all game objects in the current pools where the root game object's tag matches the tag provided
+        /// </summary>
+        public GameObject[] ExecuteGetGameObjectsWithTag(string tag)
+        {
+            var entries = new List<GameObject>();
+            foreach (var pool in _instance._pools.Values)
+            {
+                foreach (var poolEntry in pool.Entries)
+                {
+                    if(poolEntry.CompareTag(tag))
+                    {
+                        entries.AddRange(pool.Entries);
+                        break;
+                    }
+                }
+            }
+            
+            return entries.ToArray();
+        }
+
         #endregion
 
         #region FetchAvailable
