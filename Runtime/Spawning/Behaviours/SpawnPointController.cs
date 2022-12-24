@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
-    /// Responsible for controlling multiple spawn points
+    /// Responsible for knowing about multiple spawn points and keeping tracks of the last used ones.
     /// </summary>
     public sealed class SpawnPointController : MonoBehaviour
     {

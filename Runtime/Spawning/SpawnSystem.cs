@@ -216,7 +216,6 @@ namespace BrightLib.Pooling.Runtime
         public static int GetRandomSpawnPoint(SpawnPoint[] spawnPoints)
         {
             var targetIndex = UnityEngine.Random.Range(0, spawnPoints.Length - 1);
-
             return targetIndex;
         }
 

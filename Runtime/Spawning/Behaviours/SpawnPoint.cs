@@ -3,7 +3,7 @@
 namespace BrightLib.Pooling.Runtime
 {
     /// <summary>
-    /// A point on the game that can be used to spawn game object
+    /// A point on the game that can be used to spawn a game object
     /// </summary>
     public sealed class SpawnPoint : MonoBehaviour
     {
