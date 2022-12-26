@@ -6,12 +6,12 @@ namespace BrightLib.Pooling.Runtime
     public sealed class Poolable : MonoBehaviour
     {
         /// <summary>
-        /// Fired by the object once it has been aquired successfuly
+        /// Fired when the object is acquired from the pool
         /// </summary>
         public event Action<GameObject> OnAcquire;
 
         /// <summary>
-        /// Fired by the object once it has finished it's use and it becomes available for the pool
+        /// Fired when the object retuns to the pool
         /// </summary>
         public event Action<GameObject> OnRelease;
 
@@ -35,6 +35,9 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Returns the object to the pool and disables it.
         /// </summary>
+        /// <remarks>
+        /// Call when you're done using it ie. a bullet finishes it's trajectory
+        /// </remarks>
         public void Release()
         {
             if (!Acquired)
