@@ -3,31 +3,33 @@ using UnityEngine;
 
 namespace BrightLib.Pooling.Runtime
 {
-    public class Poolable : MonoBehaviour
+    public sealed class Poolable : MonoBehaviour
     {
         /// <summary>
         /// Fired by the object once it has been aquired successfuly
         /// </summary>
-        public event Action<GameObject> onAcquire;
+        public event Action<GameObject> OnAcquire;
 
         /// <summary>
         /// Fired by the object once it has finished it's use and it becomes available for the pool
         /// </summary>
-        public event Action<GameObject> onRelease;
+        public event Action<GameObject> OnRelease;
 
-        public bool Acquired { get => _acquired; }
-
-        private bool _acquired;
+        public bool Acquired { get; private set; }
 
         /// <summary>
         /// Acquires the object from the pool.
         /// </summary>
         internal void Acquire()
         {
-            _acquired = true;
+            if (Acquired)
+            {
+                return;
+            }
+
+            Acquired = true;
             gameObject.SetActive(true);
-            onAcquire?.Invoke(gameObject);
-            OnAcquire();
+            OnAcquire?.Invoke(gameObject);
         }
 
         /// <summary>
@@ -35,28 +37,14 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         public void Release()
         {
-            if (!_acquired) return;
+            if (!Acquired)
+            {
+                return;
+            }
 
-            _acquired = false;
+            Acquired = false;
             gameObject.SetActive(false);
-            onRelease?.Invoke(gameObject);
-            OnRelease();
-        }
-
-        /// <summary>
-        /// Called after the object is Acquired.
-        /// </summary>
-        protected virtual void OnAcquire()
-        {
-
-        }
-
-        /// <summary>
-        /// Called after the object is Released.
-        /// </summary>
-        protected virtual void OnRelease()
-        {
-
+            OnRelease?.Invoke(gameObject);
         }
 
     }

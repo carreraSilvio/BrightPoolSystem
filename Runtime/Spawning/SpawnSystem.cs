@@ -101,9 +101,9 @@ namespace BrightLib.Pooling.Runtime
             return Spawn(idEnum.ToString(), spawnPoints, spawnDistance);
         }
 
-        public static bool Spawn(Enum idEnum, Transform transform)
+        public static bool Spawn(Enum idEnum, Vector3 position)
         {
-            return ExecuteSpawn(idEnum.ToString(), transform.position);
+            return ExecuteSpawn(idEnum.ToString(), position);
         }
 
         public static bool Spawn(Enum idEnum)
@@ -118,9 +118,9 @@ namespace BrightLib.Pooling.Runtime
             return ExecuteSpawn(id, spawnPoint.transform.position);
         }
 
-        public static bool Spawn(string id, Transform transform)
+        public static bool Spawn(string id, Vector3 position)
         {
-            return ExecuteSpawn(id, transform.position);
+            return ExecuteSpawn(id, position);
         }
 
         public static bool Spawn(string id)
@@ -131,6 +131,22 @@ namespace BrightLib.Pooling.Runtime
         public static bool ExecuteSpawn(string id, Vector3 position)
         {
             if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
+            {
+                return false;
+            }
+
+            gameObject.transform.position = position;
+            return true;
+        }
+
+        public static bool Spawn(Enum idEnum, Vector3 position, out GameObject gameObject)
+        {
+            return ExecuteSpawn(idEnum.ToString(), position, out gameObject);
+        }
+
+        public static bool ExecuteSpawn(string id, Vector3 position, out GameObject gameObject)
+        {
+            if (!PoolSystem.FetchAvailable(id, out gameObject))
             {
                 return false;
             }

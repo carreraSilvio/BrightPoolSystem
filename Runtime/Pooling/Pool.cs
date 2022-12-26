@@ -33,7 +33,7 @@ namespace BrightLib.Pooling.Runtime
             var poolable = prefab.GetComponentInChildren<Poolable>(true);
             if (poolable == null)
             {
-                Debug.LogWarning($"No {nameof(Poolable)} found in {prefab.name} prefab. Make sure one script extends from it.");
+                Debug.LogWarning($"{nameof(Poolable)} script not found in [{prefab.name}] prefab. You need to have one.");
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace BrightLib.Pooling.Runtime
                 entry.SetActive(false);
 
                 var poolable = entry.GetComponentInChildren<Poolable>(true);
-                poolable.onRelease += HandlePoolableRelease;
+                poolable.OnRelease += HandlePoolableRelease;
                 _entries[index] = entry;
                 _available.Enqueue(entry);
             }

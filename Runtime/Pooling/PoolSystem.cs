@@ -74,31 +74,52 @@ namespace BrightLib.Pooling.Runtime
 
         #region Peek
 
-        /// <inheritdoc cref="ExecutePeek(string)"/>
-        public static GameObject[] Peek(Enum enumId)
+        /// <inheritdoc cref="ExecuteGetEntries(string)"/>
+        public static GameObject[] GetEntries(Enum poolId)
         {
-            return Instance.ExecutePeek(enumId.ToString());
+            return Instance.ExecuteGetEntries(poolId.ToString());
         }
 
         /// <summary>
-        /// Returns all members of a given pool
+        /// Returns all entries of requested pool
         /// </summary>
-        private GameObject[] ExecutePeek(string id)
+        private GameObject[] ExecuteGetEntries(string id)
         {
             var entries = _pools[id].Entries;
             return entries;
         }
 
-        /// <inheritdoc cref="ExecuteGetGameObjectsWithTag(string)"/>
-        public static GameObject[] GetGameObjectsAllWithTag(string tag)
+        /// <inheritdoc cref="ExecuteGetEntries(Enum[])"/>
+        public static GameObject[] GetEntries(Enum[] poolIds)
         {
-            return Instance.ExecuteGetGameObjectsWithTag(tag);
+            return Instance.ExecuteGetEntries(poolIds);
+        }
+
+        /// <summary>
+        /// Returns all entries from requested pools
+        /// </summary>
+        private GameObject[] ExecuteGetEntries(Enum[] poolIds)
+        {
+            var entries = new List<GameObject>();
+            foreach(var poolId in poolIds)
+            {
+                var poolEntries = ExecuteGetEntries(poolId.ToString());
+                entries.AddRange(poolEntries);
+            }
+
+            return entries.ToArray();
+        }
+
+        /// <inheritdoc cref="ExecuteGetEntriesWithTag(string)"/>
+        public static GameObject[] GetEntriesWithTag(string tag)
+        {
+            return Instance.ExecuteGetEntriesWithTag(tag);
         }
 
         /// <summary>
         /// Returns all game objects in the current pools where the root game object's tag matches the tag provided
         /// </summary>
-        public GameObject[] ExecuteGetGameObjectsWithTag(string tag)
+        public GameObject[] ExecuteGetEntriesWithTag(string tag)
         {
             var entries = new List<GameObject>();
             foreach (var pool in _instance._pools.Values)
