@@ -14,13 +14,13 @@ namespace BrightLib.Pooling.Runtime
         public GameObject LocalRoot { get => _localRoot; }
         public GameObject Prefab { get => _prefab; }
 
-        private GameObject _localRoot;
 
         private readonly string _id;
-        private GameObject _prefab;
+        private readonly GameObject _prefab;
+        private readonly GameObject _localRoot;
 
-        private GameObject[] _entries;
-        private Queue<GameObject> _available;
+        private readonly GameObject[] _entries;
+        private readonly Queue<GameObject> _available = new Queue<GameObject>();
 
         public Pool(GameObject prefab, int size, GameObject localRoot)
               : this(prefab.name, prefab, size, localRoot)

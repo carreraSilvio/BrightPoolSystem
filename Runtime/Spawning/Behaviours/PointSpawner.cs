@@ -52,7 +52,10 @@ namespace BrightLib.Pooling.Runtime
 
             for (int i = 0; i < spawnPoints.Length; i++)
             {
-                if (_avoidRepeating && i == _lastSpawnPointIndex) continue;
+                if (_avoidRepeating && i == _lastSpawnPointIndex)
+                {
+                    continue;
+                }
 
                 var sp = spawnPoints[i];
                 if (spawnDistance == SpawnDistanceType.Far)
