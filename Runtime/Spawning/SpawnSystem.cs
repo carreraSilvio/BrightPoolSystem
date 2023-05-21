@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace BrightLib.Pooling.Runtime
 {
@@ -57,7 +58,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
-            var spawnPoint = GetSpawnPoint(spawnPoints, spawnDistance);
+            var spawnPoint = GetSpawnPointAndMarkUse(spawnPoints, spawnDistance);
             spawnPoint.MarkUse();
             return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
         }
@@ -113,7 +114,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
-            var spawnPoint = GetSpawnPoint(spawnPoints, spawnDistance);
+            var spawnPoint = GetSpawnPointAndMarkUse(spawnPoints, spawnDistance);
             spawnPoint.MarkUse();
             return ExecuteSpawn(id, spawnPoint.transform.position);
         }
@@ -157,82 +158,44 @@ namespace BrightLib.Pooling.Runtime
 
         #endregion
 
-        public static SpawnPoint GetSpawnPoint(SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
+        public static SpawnPoint GetSpawnPointAndMarkUse(SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance)
         {
-            int targetIndex;
-            if (spawnDistance == SpawnDistanceType.Far)
+            SpawnPoint spawnPoint = null;
+            switch (spawnDistance)
             {
-                targetIndex = GetFarthestSpawnPoint(spawnPoints, new List<int>());
-            }
-            else
-            {
-                targetIndex = GetClosestSpawnPoint(spawnPoints, new List<int>());
-            }
+                case SpawnDistanceType.Far:
+                case SpawnDistanceType.Manual:
+                    //Get the furthest, least used spawn point
+                    spawnPoint = spawnPoints.Where(spawnPoint => spawnPoint.IsPlayerOutsideSafeSpawnDistance).
+                        OrderByDescending(spawnPoint => spawnPoint.DistanceToPlayer).
+                            OrderBy(spawnPoint => spawnPoint.TimesUsed).FirstOrDefault();
+                    break;
 
-            var targerSpawnPoint = spawnPoints[targetIndex];
-            targerSpawnPoint.MarkUse();
-            return targerSpawnPoint;
-        }
+                case SpawnDistanceType.Close:
+                    //Get the closest, least used spawn point
+                    spawnPoint = spawnPoints.Where(spawnPoint => spawnPoint.IsPlayerOutsideSafeSpawnDistance).
+                        OrderBy(spawnPoint => spawnPoint.DistanceToPlayer).
+                            OrderBy(spawnPoint => spawnPoint.TimesUsed).FirstOrDefault();
+                    break;
 
-        /// <summary>
-        /// Get the farthest spawnPoint from the player
-        /// </summary>
-        public static int GetFarthestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
-        {
-            var targetIndex = 0;
-            var distance = -1f;
-
-            for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
-            {
-                if (ignoreIndex.Contains(spawnPointIndex))
-                {
-                    continue;
-                }
-
-                var spawnPoint = spawnPoints[spawnPointIndex];
-                if (spawnPoint.DistanceToPlayer >= distance)
-                {
-                    distance = spawnPoint.DistanceToPlayer;
-                    targetIndex = spawnPointIndex;
-                }
+                case SpawnDistanceType.Random:
+                    spawnPoint = GetRandomSpawnPoint(spawnPoints.Where(spawnPoint => spawnPoint.IsPlayerOutsideSafeSpawnDistance).ToArray());
+                    break;
+                default:
+                    break;
             }
 
-            return targetIndex;
-        }
-
-        /// <summary>
-        /// Get the closest spawnPoint fromn the player
-        /// </summary>
-        public static int GetClosestSpawnPoint(SpawnPoint[] spawnPoints, List<int> ignoreIndex)
-        {
-            var targetIndex = 0;
-            var distance = 9999f;
-
-            for (int spawnPointIndex = 0; spawnPointIndex < spawnPoints.Length; spawnPointIndex++)
-            {
-                if (ignoreIndex.Contains(spawnPointIndex))
-                {
-                    continue;
-                }
-
-                var spawnPoint = spawnPoints[spawnPointIndex];
-                if (spawnPoint.DistanceToPlayer <= distance)
-                {
-                    distance = spawnPoint.DistanceToPlayer;
-                    targetIndex = spawnPointIndex;
-                }
-            }
-
-            return targetIndex;
+            spawnPoint.MarkUse();
+            return spawnPoint;
         }
 
         /// <summary>
         /// Get a random spawn point
         /// </summary>
-        public static int GetRandomSpawnPoint(SpawnPoint[] spawnPoints)
+        public static SpawnPoint GetRandomSpawnPoint(SpawnPoint[] spawnPoints)
         {
             var targetIndex = UnityEngine.Random.Range(0, spawnPoints.Length - 1);
-            return targetIndex;
+            return spawnPoints[targetIndex];
         }
 
     }

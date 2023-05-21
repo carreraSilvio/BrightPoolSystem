@@ -7,8 +7,13 @@ namespace BrightLib.Pooling.Runtime
     /// </summary>
     public sealed class SpawnPoint : MonoBehaviour
     {
+        public bool IsPlayerOutsideSafeSpawnDistance => DistanceToPlayer >= SafeSpawnDistance;
         public float DistanceToPlayer => Vector3.Distance(_player.transform.position, transform.position);
         public float LastTimeUsed { get; private set; }
+        public int TimesUsed { get; private set; }
+        public float SafeSpawnDistance => _safeSpawnDistance;
+        [SerializeField]
+        private float _safeSpawnDistance = 3f;
 
         private static GameObject _player;
 
@@ -25,6 +30,12 @@ namespace BrightLib.Pooling.Runtime
         public void MarkUse()
         {
             LastTimeUsed = Time.time;
+            TimesUsed++;
+        }
+
+        public void ClearUse()
+        {
+            TimesUsed = 0;
         }
 
         private static void ValidatePlayerReference()

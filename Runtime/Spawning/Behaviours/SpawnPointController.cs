@@ -13,8 +13,6 @@ namespace BrightLib.Pooling.Runtime
         [SerializeField]
         private SpawnPoint[] _spawnPoints = default;
 
-        private readonly List<int> _lastIndexUsedList = new List<int>();
-
         private void Reset()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
@@ -25,55 +23,18 @@ namespace BrightLib.Pooling.Runtime
             _spawnPoints = GetComponentsInChildren<SpawnPoint>();
         }
 
-        public void ClearIndexUsedList()
+        public void ClearSpawnPointUsage()
         {
-            _lastIndexUsedList.Clear();
+            foreach(var spawnPoint in _spawnPoints)
+            {
+                spawnPoint.ClearUse();
+            }
         }
 
         public SpawnPoint GetSpawnPoint(SpawnDistanceType spawnDistanceType)
         {
-            if (spawnDistanceType == SpawnDistanceType.Far)
-            {
-                return GetFarthestSpawnPoint();
-            }
-            else if (spawnDistanceType == SpawnDistanceType.Random)
-            {
-                return GetRandomSpawnPoint();
-            }
-
-            return GetClosestSpawnPoint();
+            return SpawnSystem.GetSpawnPointAndMarkUse(_spawnPoints, spawnDistanceType);
         }
-
-        public SpawnPoint GetFarthestSpawnPoint()
-        {
-            if(_lastIndexUsedList.Count == _spawnPoints.Length)
-            {
-                _lastIndexUsedList.Clear();
-            }
-
-            var spawnPointIndex = SpawnSystem.GetFarthestSpawnPoint(_spawnPoints, _lastIndexUsedList);
-            _lastIndexUsedList.Add(spawnPointIndex);
-            return _spawnPoints[spawnPointIndex];
-        }
-
-        public SpawnPoint GetClosestSpawnPoint()
-        {
-            if (_lastIndexUsedList.Count == _spawnPoints.Length)
-            {
-                _lastIndexUsedList.Clear();
-            }
-
-            var spawnPointIndex = SpawnSystem.GetClosestSpawnPoint(_spawnPoints, _lastIndexUsedList);
-            _lastIndexUsedList.Add(spawnPointIndex);
-            return _spawnPoints[spawnPointIndex];
-        }
-
-        public SpawnPoint GetRandomSpawnPoint()
-        {
-            var spawnPointIndex = SpawnSystem.GetRandomSpawnPoint(_spawnPoints);
-            return _spawnPoints[spawnPointIndex];
-        }
-
 
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
@@ -88,6 +49,7 @@ namespace BrightLib.Pooling.Runtime
                 UnityEditor.Handles.color = Color.white;
                 UnityEditor.Handles.Label(midPoint, $"{midPoint.magnitude:F2}");
                 Gizmos.DrawLine(startPoint.transform.position, endPoint.transform.position);
+                Gizmos.DrawWireSphere(_spawnPoints[pointIndex].transform.position, _spawnPoints[pointIndex].SafeSpawnDistance);
             }
         }
 #endif
