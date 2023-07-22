@@ -160,6 +160,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if (!_pools.ContainsKey(id))
             {
+                Debug.LogError($"Poolable [id={id}] was not found.");
                 gameObject = default;
                 return false;
             }
