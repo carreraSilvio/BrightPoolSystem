@@ -39,18 +39,26 @@ namespace BrightLib.Pooling.Runtime
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
+            if(_spawnPoints == null 
+                || _spawnPoints.Length == 0)
+            {
+                return;
+            }
             Gizmos.color = Color.yellow;
 
             for (int pointIndex = 0; pointIndex < _spawnPoints.Length - 1; pointIndex++)
             {
-                var startPoint = _spawnPoints[pointIndex];
-                var endPoint = _spawnPoints[pointIndex + 1];
-                var midPoint = (startPoint.transform.position + endPoint.transform.position) / 2;
-                UnityEditor.Handles.color = Color.white;
-                UnityEditor.Handles.Label(midPoint, $"{midPoint.magnitude:F2}");
-                Gizmos.DrawLine(startPoint.transform.position, endPoint.transform.position);
-                Gizmos.DrawWireSphere(_spawnPoints[pointIndex].transform.position, _spawnPoints[pointIndex].SafeSpawnDistance);
+                DrawLineBetweenSpawnPoints(_spawnPoints[pointIndex], _spawnPoints[pointIndex + 1]);
             }
+            DrawLineBetweenSpawnPoints(_spawnPoints[_spawnPoints.Length - 1], _spawnPoints[0]);
+        }
+
+        private void DrawLineBetweenSpawnPoints(SpawnPoint spawnPointA, SpawnPoint spawnPointB)
+        {
+            var midPoint = (spawnPointA.transform.position + spawnPointB.transform.position) / 2;
+            UnityEditor.Handles.color = Color.white;
+            UnityEditor.Handles.Label(midPoint, $"{midPoint.magnitude:F2}");
+            Gizmos.DrawLine(spawnPointA.transform.position, spawnPointB.transform.position);
         }
 #endif
 

@@ -12,7 +12,9 @@ namespace BrightLib.Pooling.Runtime
         public float LastTimeUsed { get; private set; }
         public int TimesUsed { get; private set; }
         public float SafeSpawnDistance => _safeSpawnDistance;
+
         [SerializeField]
+        [Tooltip("If the player is within this distance, don't use this spawn point.")]
         private float _safeSpawnDistance = 3f;
 
         private static GameObject _player;
@@ -54,10 +56,16 @@ namespace BrightLib.Pooling.Runtime
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, 1f);
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, 0.5f);
             UnityEditor.Handles.color = Color.white;
             UnityEditor.Handles.Label(transform.position, $"{name}");
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _safeSpawnDistance);
         }
 #endif
 

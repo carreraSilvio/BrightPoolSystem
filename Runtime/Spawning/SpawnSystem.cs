@@ -51,9 +51,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool Spawn(string id, SpawnPointController spawnPointController, SpawnDistanceType spawnDistance, out Poolable poolable)
         {
-            var spawnPoint = spawnPointController.GetSpawnPoint(spawnDistance);
-            spawnPoint.MarkUse();
-            return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
+            return Spawn(id, spawnPointController.SpawnPoints, spawnDistance, out poolable);
         }
 
         public static bool Spawn(string id, SpawnPoint[] spawnPoints, SpawnDistanceType spawnDistance, out Poolable poolable)
@@ -71,6 +69,18 @@ namespace BrightLib.Pooling.Runtime
         public static bool Spawn(string id, out Poolable poolable)
         {
             return ExecuteSpawn(id, Vector3.zero, out poolable);
+        }
+
+        public static bool Spawn(string id, SpawnPointController spawnPointController, int spawnPointIndex, out Poolable poolable)
+        {
+            if(spawnPointIndex >= spawnPointController.SpawnPoints.Length)
+            {
+                poolable = default;
+                return false;
+            }
+            var spawnPoint =  spawnPointController.SpawnPoints[spawnPointIndex];
+            spawnPoint.MarkUse();
+            return ExecuteSpawn(id, spawnPoint.transform.position, out poolable);
         }
 
         private static bool ExecuteSpawn(string id, Vector3 position, out Poolable poolable)
