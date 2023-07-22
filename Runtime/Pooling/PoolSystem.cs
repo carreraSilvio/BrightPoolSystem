@@ -260,7 +260,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if (!_pools.ContainsKey(id))
             {
-                Debug.LogWarning($"No {id} pool found.");
+                Debug.LogError($"No {id} pool found.");
                 return -1;
             }
 
