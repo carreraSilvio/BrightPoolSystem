@@ -56,8 +56,8 @@ namespace BrightLib.Pooling.Runtime
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(transform.position, 0.5f);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _safeSpawnDistance);
             UnityEditor.Handles.color = Color.white;
             UnityEditor.Handles.Label(transform.position, $"{name}");
         }
