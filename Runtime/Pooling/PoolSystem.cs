@@ -85,6 +85,11 @@ namespace BrightLib.Pooling.Runtime
         /// </summary>
         private GameObject[] ExecuteGetEntries(string id)
         {
+            if(!_pools.ContainsKey(id))
+            {
+                Debug.LogError($"Pool with [id={id}] not found.");
+                return null;
+            }
             var entries = _pools[id].Entries;
             return entries;
         }
