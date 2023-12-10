@@ -5,7 +5,7 @@ namespace BrightLib.Pooling.Runtime
     /// <summary>
     /// Creates the pools definide by the config array
     /// </summary>
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-60)]
     public class PoolSystemInitializer : MonoBehaviour
     {
         [SerializeField]
