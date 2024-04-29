@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -158,6 +157,7 @@ namespace BrightLib.Pooling.Runtime
         {
             if (!PoolSystem.FetchAvailable(id, out gameObject))
             {
+                Debug.LogWarning($"Can't spawn poolable of type [{id}], none available.");
                 return false;
             }
 

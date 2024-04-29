@@ -317,10 +317,12 @@ namespace BrightLib.Pooling.Runtime
             var pool = _pools[id];
             if (evt == PoolEventType.OnAcquire)
             {
+                pool.onPoolableAcquire -= target;
                 pool.onPoolableAcquire += target;
             }
             else
             {
+                pool.onPoolableRelease -= target;
                 pool.onPoolableRelease += target;
             }
         }
