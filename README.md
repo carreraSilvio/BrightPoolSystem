@@ -1,14 +1,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/carreraSilvio/BrightPoolSystem/blob/master/LICENSE.md)
 
 # Bright Pool System
-Creates and manages access to your pools. 
+A pooling system that creates and manages access to your pool of objects. 
 
 ![Imgur](https://i.imgur.com/XcPNTTL.gif)
 
 ## Features
 * Create pools when it's best for your project.
-* Avoid garbage collection kicking in by resuing objects.
-* Use Aquire and Release methods as ways your "Instantiate" and "Destroy" objects.
+* Avoid garbage collection by resuing objects.
+* Use Aquire and Release methods as your "Instantiate" and "Destroy" objects.
 * Use events to notify other systems when objects are aquired and released.
 
 ## Prerequisites
