@@ -2,7 +2,7 @@
   "name": "com.brightlib.poolsystem",
   "version": "1.7.0",
   "displayName": "Bright Pool System",
-  "description": "Create and manage object pools. Reuse your objects. Avoid instatiating and destryoing objects all the time. ",
+  "description": "Create and manage object pools. Reuse your objects. Avoid instantiating and destroying objects all the time. ",
   "unity": "2018.2",
   "unityRelease": "15f1",
   "author": 
