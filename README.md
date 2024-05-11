@@ -1,4 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/carreraSilvio/BrightPoolSystem/blob/master/LICENSE.md)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fda86a824b52472f83bd189758663a15)](https://app.codacy.com/gh/carreraSilvio/BrightPoolSystem/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # Bright Pool System
 A pooling system that creates and manages access to your pool of objects. 
