@@ -84,7 +84,7 @@ namespace BrightLib.Pooling.Runtime
 
         private static bool ExecuteSpawn(string id, Vector3 position, out Poolable poolable)
         {
-            if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
+            if (!PoolSystem.TryFetchAvailable(id, out GameObject gameObject))
             {
                 poolable = default;
                 return false;
@@ -139,7 +139,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool ExecuteSpawn(string id, Vector3 position)
         {
-            if (!PoolSystem.FetchAvailable(id, out GameObject gameObject))
+            if (!PoolSystem.TryFetchAvailable(id, out GameObject gameObject))
             {
                 return false;
             }
@@ -155,7 +155,7 @@ namespace BrightLib.Pooling.Runtime
 
         public static bool ExecuteSpawn(string id, Vector3 position, out GameObject gameObject)
         {
-            if (!PoolSystem.FetchAvailable(id, out gameObject))
+            if (!PoolSystem.TryFetchAvailable(id, out gameObject))
             {
                 Debug.LogWarning($"Can't spawn poolable of type [{id}], none available.");
                 return false;

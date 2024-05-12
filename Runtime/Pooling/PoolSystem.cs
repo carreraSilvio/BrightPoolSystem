@@ -23,6 +23,8 @@ namespace BrightLib.Pooling.Runtime
         private static readonly string MAIN_ROOT_NAME = "Pools";
         private static readonly string LOCAL_ROOT_SUFFIX = "Pool";
 
+        private static readonly int DEFAULT_POOL_SIZE = 10;
+
         #region Singleton
         private static PoolSystem _instance;
 
@@ -48,22 +50,30 @@ namespace BrightLib.Pooling.Runtime
 
         #region CreatePool
 
-        /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
-        public static void CreatePool(Enum id, GameObject prefab, int size = 10)
+        /// <inheritdoc cref="CreatePool_Internal(string, GameObject, int)"/>
+        public static void CreatePool(Enum id, GameObject prefab)
         {
-            Instance.ExecuteCreatePool(id.ToString(), prefab, size);
+            Instance.CreatePool_Internal(id.ToString(), prefab, DEFAULT_POOL_SIZE);
+        }
+        public static void CreatePool(Enum id, GameObject prefab, int size)
+        {
+            Instance.CreatePool_Internal(id.ToString(), prefab, size);
         }
 
-        /// <inheritdoc cref="ExecuteCreatePool(string, GameObject, int)"/>
-        public static void CreatePool(string id, GameObject prefab, int size = 10)
+        /// <inheritdoc cref="CreatePool_Internal(string, GameObject, int)"/>
+        public static void CreatePool(string id, GameObject prefab)
         {
-            Instance.ExecuteCreatePool(id, prefab, size);
+            Instance.CreatePool_Internal(id, prefab, DEFAULT_POOL_SIZE);
+        }
+        public static void CreatePool(string id, GameObject prefab, int size)
+        {
+            Instance.CreatePool_Internal(id, prefab, size);
         }
 
         /// <summary>
         /// Create a new pool and add it to list
         /// </summary>
-        private void ExecuteCreatePool(string id, GameObject prefab, int size = 10)
+        private void CreatePool_Internal(string id, GameObject prefab, int size)
         {
             var localRoot = GetLocalRoot(id);
             var pool = new Pool(id, prefab, size, localRoot);
@@ -146,22 +156,22 @@ namespace BrightLib.Pooling.Runtime
 
         #region FetchAvailable
 
-        /// <inheritdoc cref="ExecuteFetchAvailable(string, out GameObject)"/>
-        public static bool FetchAvailable(string id, out GameObject gameObject)
+        /// <inheritdoc cref="TryFetchAvailable_Internal(string, out GameObject)"/>
+        public static bool TryFetchAvailable(string id, out GameObject gameObject)
         {
-            return Instance.ExecuteFetchAvailable(id, out gameObject);
+            return Instance.TryFetchAvailable_Internal(id, out gameObject);
         }
 
-        /// <inheritdoc cref="ExecuteFetchAvailable{T}(string, out T)"/>
-        public static bool FetchAvailable<T>(string id, out T component) where T : MonoBehaviour
+        /// <inheritdoc cref="TryFetchAvailable_Internal{T}(string, out T)"/>
+        public static bool TryFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
         {
-            return Instance.ExecuteFetchAvailable<T>(id, out component);
+            return Instance.TryFetchAvailable_Internal<T>(id, out component);
         }
 
         /// <summary>
         /// Searches for an available object and if it finds one and returns it.
         /// </summary>
-        private bool ExecuteFetchAvailable(string id, out GameObject gameObject)
+        private bool TryFetchAvailable_Internal(string id, out GameObject gameObject)
         {
             if (!_pools.ContainsKey(id))
             {
@@ -177,7 +187,7 @@ namespace BrightLib.Pooling.Runtime
         /// <summary>
         /// Searches for an available object and if it finds oneand returns.
         /// </summary>
-        private bool ExecuteFetchAvailable<T>(string id, out T component) where T : MonoBehaviour
+        private bool TryFetchAvailable_Internal<T>(string id, out T component) where T : MonoBehaviour
         {
             if (!_pools.ContainsKey(id))
             {
