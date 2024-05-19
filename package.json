@@ -1,26 +1,13 @@
 {
-  "name": "com.brightlib.poolsystem",
-  "version": "1.7.0",
-  "displayName": "Bright Pool System",
-  "description": "Create and manage object pools. Reuse your objects. Avoid instantiating and destroying objects all the time. ",
+  "name": "com.bright.simpleEventSystem",
+  "version": "1.0.0",
+  "displayName": "Simple Event System",
+  "description": "A simple global event system",
   "unity": "2018.2",
   "unityRelease": "15f1",
   "author": 
   {
     "name": "Silvio Carréra",
-    "url": "https://github.com/silviocarrera/BrightPoolSystem"
-  },
-  "samples": 
-  [
-    {
-        "displayName": "01 - CubeSample",
-        "description": "A pool of cubes is created. The cubes die after a short time and are reused.",
-        "path": "Samples~/01 - CubeSample"
-    },
-    {
-        "displayName": "02 - BulletsSample",
-        "description": "FPS shooting mechanic with bullets being reused from a pool.",
-        "path": "Samples~/02 - BulletsSample"
-    }
-  ]
+    "url": "https://github.com/carreraSilvio/SimpleEventSystem"
+  }
 }
